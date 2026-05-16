@@ -11,26 +11,23 @@ export default async function handler(req, res) {
   const { prompt, model = 'flux-schnell' } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Prompt vazio.' });
 
-  const models = {
-    'flux-schnell': { owner: 'black-forest-labs', name: 'flux-schnell' },
-    'flux-dev':     { owner: 'black-forest-labs', name: 'flux-dev' },
-    'sdxl':         { owner: 'stability-ai',      name: 'sdxl' },
-  };
-  const m = models[model] || models['flux-schnell'];
+  // Usa versão específica do SDXL sem safety checker
+  const VERSION = 'da77bc59ee60423279fd632efb4795ab731d9e3ca9078d39d751131ca6a99f00';
 
   try {
-    // Cria predição
-    const create = await fetch(`https://api.replicate.com/v1/models/${m.owner}/${m.name}/predictions`, {
+    const create = await fetch('https://api.replicate.com/v1/predictions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        version: VERSION,
         input: {
-          prompt,
-          negative_prompt: 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, cartoon',
-          aspect_ratio: '3:4',
-          output_format: 'webp',
-          output_quality: 90,
+          prompt: prompt + ', nude, nsfw, photorealistic, 8k',
+          negative_prompt: 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, cartoon, clothed',
+          width: 768,
+          height: 1024,
           num_outputs: 1,
+          guidance_scale: 7.5,
+          num_inference_steps: 30,
           disable_safety_checker: true,
         },
       }),
