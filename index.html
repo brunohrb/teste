@@ -36,38 +36,40 @@
     .chip:hover{border-color:var(--accent);color:var(--accent)}
     .chip.on{background:var(--glow);border-color:var(--accent);color:var(--accent2)}
 
-    .btn-gen{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:10px;padding:.8rem;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;transition:opacity .2s,transform .1s;box-shadow:0 4px 20px var(--glow);margin-top:.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .btns{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.25rem}
+    .btn-gen{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:10px;padding:.75rem;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;box-shadow:0 4px 20px var(--glow);display:flex;align-items:center;justify-content:center;gap:.4rem}
     .btn-gen:hover{opacity:.9}.btn-gen:active{transform:scale(.98)}.btn-gen:disabled{opacity:.4;cursor:not-allowed}
+    .btn-gen.vid{background:linear-gradient(135deg,#f0abfc,#818cf8)}
 
     main{display:flex;flex-direction:column;overflow:hidden}
     .out-body{flex:1;overflow-y:auto;padding:1.75rem;background:var(--bg);min-height:400px}
 
     .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;min-height:340px;color:var(--muted);text-align:center}
     .empty .ico{font-size:3rem;opacity:.35}
-    .empty p{font-size:.88rem;max-width:300px;line-height:1.65}
+    .empty p{font-size:.88rem;max-width:320px;line-height:1.7}
 
     .loader{display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;min-height:340px;color:var(--muted);text-align:center}
     .loader.on{display:flex}
     .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .loader-msg{font-size:.88rem;line-height:1.8}
+    .loader-msg{font-size:.88rem;line-height:1.9}
 
     .results{display:none;max-width:720px;margin:0 auto}
     .results.show{display:block;animation:fadeIn .4s ease}
-    .img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-bottom:1rem}
-    .img-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface2);cursor:pointer}
-    .img-card img{width:100%;display:block;transition:transform .3s}
-    .img-card:hover img{transform:scale(1.02)}
-    .img-card .overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;display:flex;align-items:center;justify-content:center;transition:opacity .2s;font-size:.85rem;color:#fff;gap:.5rem}
+    .img-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface2);margin-bottom:1rem}
+    .img-card img,.img-card video{width:100%;display:block}
+    .img-card .overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;display:flex;align-items:center;justify-content:center;transition:opacity .2s;gap:.75rem}
     .img-card:hover .overlay{opacity:1}
+    .ovr-btn{color:#fff;background:rgba(0,0,0,.6);padding:.4rem .8rem;border-radius:8px;text-decoration:none;font-size:.82rem;border:none;cursor:pointer}
 
-    .actions{display:flex;gap:.6rem;flex-wrap:wrap}
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
     .btn-a{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem 1rem;font-size:.82rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.4rem;text-decoration:none}
     .btn-a:hover{border-color:var(--accent);color:var(--accent)}
     .btn-a.primary{background:linear-gradient(135deg,var(--accent),#818cf8);border:none;color:#fff;font-weight:700}
     .btn-a.primary:hover{opacity:.9;color:#fff}
 
-    .prompt-used{font-size:.72rem;color:var(--muted);margin-top:1rem;padding:.75rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);line-height:1.6;word-break:break-word}
+    .prompt-used{font-size:.72rem;color:var(--muted);padding:.75rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);line-height:1.6;word-break:break-word}
+    .err{background:#1f0808;border:1px solid #7f1d1d;border-radius:10px;color:var(--danger);padding:1rem 1.25rem;font-size:.86rem;line-height:1.7}
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:720px){.wrap{grid-template-columns:1fr}aside{border-right:none;border-bottom:1px solid var(--border)}}
@@ -79,7 +81,7 @@
   <div class="logo">✨</div>
   <div>
     <h1>AI Creator</h1>
-    <p>Gerador de imagens com IA · Grátis · Sem cadastro</p>
+    <p>Imagens e vídeos com IA · Replicate · Vercel</p>
   </div>
   <span class="badge">+18</span>
 </header>
@@ -171,36 +173,15 @@
         </div>
       </div>
       <div class="fg">
-        <label>Pose</label>
+        <label>Pose / Ação</label>
         <div class="chips">
           <span class="chip" data-g="pose">Deitada sedutora</span>
           <span class="chip" data-g="pose">Em pé sensual</span>
           <span class="chip" data-g="pose">Olhando câmera</span>
           <span class="chip" data-g="pose">De costas</span>
           <span class="chip" data-g="pose">Dançando</span>
+          <span class="chip" data-g="pose">Se tocando</span>
         </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="stitle">Modelo de IA</div>
-      <div class="fg">
-        <select id="modelo">
-          <option value="flux-realism">FLUX Realism — Ultra realista</option>
-          <option value="flux">FLUX — Alta qualidade</option>
-          <option value="turbo">Turbo — Rápido</option>
-        </select>
-      </div>
-    </div>
-
-    <div>
-      <div class="stitle">Quantidade</div>
-      <div class="fg">
-        <select id="qtd">
-          <option value="1">1 imagem</option>
-          <option value="2">2 imagens</option>
-          <option value="4" selected>4 imagens</option>
-        </select>
       </div>
     </div>
 
@@ -209,9 +190,10 @@
       <div class="fg"><textarea id="extras" placeholder="Detalhes adicionais, fetiches, acessórios..."></textarea></div>
     </div>
 
-    <button class="btn-gen" id="btnGen" onclick="gerar()">
-      <span>✨</span> Gerar Imagens
-    </button>
+    <div class="btns">
+      <button class="btn-gen" id="btnImg" onclick="gerarImagem()">🖼️ Imagem</button>
+      <button class="btn-gen vid" id="btnVid" onclick="gerarVideo()">🎬 Vídeo</button>
+    </div>
 
   </aside>
 
@@ -219,17 +201,18 @@
     <div class="out-body">
 
       <div class="empty" id="empty">
-        <div class="ico">🖼️</div>
-        <p>Configure a personagem ao lado e clique em <strong>Gerar Imagens</strong>.<br><br>Grátis, sem cadastro, sem chave de API.</p>
+        <div class="ico">✨</div>
+        <p>Configure a personagem ao lado e clique em<br>
+        <strong>🖼️ Imagem</strong> ou <strong>🎬 Vídeo</strong> para gerar.</p>
       </div>
 
       <div class="loader" id="loader">
         <div class="spinner"></div>
-        <div class="loader-msg" id="loaderMsg">Gerando imagens...<br><small>Aguarde ~20 segundos</small></div>
+        <div class="loader-msg" id="loaderMsg">Gerando...</div>
       </div>
 
       <div class="results" id="results">
-        <div class="img-grid" id="imgGrid"></div>
+        <div id="mediaContainer"></div>
         <div class="actions" id="actionsRow"></div>
         <div class="prompt-used" id="promptUsed"></div>
       </div>
@@ -249,139 +232,90 @@
   const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
 
   function buildPrompt(){
-    const parts = [
-      'photorealistic',
-      'beautiful woman',
-      chip('etnia') ? chip('etnia')+' woman' : '',
+    return [
+      'photorealistic, beautiful woman',
+      chip('etnia') && chip('etnia')+' woman',
       document.getElementById('corporal').value,
-      document.getElementById('seios').value ? document.getElementById('seios').value+' breasts' : '',
-      chip('cabelo') ? chip('cabelo')+' hair' : '',
-      chip('olhos') ? chip('olhos')+' eyes' : '',
+      document.getElementById('seios').value && document.getElementById('seios').value+' breasts',
+      chip('cabelo') && chip('cabelo')+' hair',
+      chip('olhos') && chip('olhos')+' eyes',
       chip('roupa'),
       chip('pose'),
-      document.getElementById('ambiente').value ? 'in '+document.getElementById('ambiente').value : '',
+      document.getElementById('ambiente').value && 'in '+document.getElementById('ambiente').value,
       document.getElementById('extras').value,
-      '8k uhd, highly detailed, professional photography, cinematic lighting, sharp focus, hyperrealistic',
-    ].filter(Boolean);
-    return parts.join(', ');
+      '8k uhd, highly detailed, cinematic lighting, hyperrealistic',
+    ].filter(Boolean).join(', ');
   }
 
-  const neg = 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, extra limbs, cartoon, anime';
-
-  function makeImageUrl(prompt, seed){
-    const model = document.getElementById('modelo').value;
-    const p = encodeURIComponent(prompt);
-    const n = encodeURIComponent(neg);
-    return `https://image.pollinations.ai/prompt/${p}?width=768&height=1024&model=${model}&seed=${seed}&nologo=true&enhance=true&negative=${n}`;
-  }
-
-  let lastPrompt = '';
-  let lastSeeds = [];
-
-  async function gerar(){
-    const btn = document.getElementById('btnGen');
-    btn.disabled = true;
-
+  function setLoading(on){
     document.getElementById('empty').style.display = 'none';
     document.getElementById('results').classList.remove('show');
-    document.getElementById('loader').classList.add('on');
-
-    const prompt = buildPrompt();
-    lastPrompt = prompt;
-    const qtd = parseInt(document.getElementById('qtd').value);
-    lastSeeds = Array.from({length: qtd}, () => Math.floor(Math.random() * 9999999));
-
-    document.getElementById('loaderMsg').innerHTML =
-      `Gerando ${qtd} imagem${qtd>1?'s':''}...<br><small>Aguarde ~${qtd*8} segundos</small>`;
-
-    const urls = lastSeeds.map(s => makeImageUrl(prompt, s));
-
-    // Monta o grid imediatamente — imagens carregam sozinhas
-    const grid = document.getElementById('imgGrid');
-    grid.innerHTML = '';
-    let carregadas = 0;
-
-    urls.forEach((url, i) => {
-      const card = document.createElement('div');
-      card.className = 'img-card';
-      card.style.minHeight = '300px';
-      card.style.background = 'var(--surface2)';
-      card.innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:.8rem;flex-direction:column;gap:.5rem">
-          <div class="spinner" style="width:32px;height:32px;border-width:2px"></div>
-          Gerando...
-        </div>`;
-      grid.appendChild(card);
-
-      const img = new Image();
-      img.onload = () => {
-        card.style.minHeight = '';
-        card.innerHTML = `
-          <img src="${url}" alt="Imagem ${i+1}" />
-          <div class="overlay">
-            <a href="${url}" download="ai-creator-${i+1}.jpg" target="_blank" style="color:#fff;text-decoration:none">⬇️ Baixar</a>
-          </div>`;
-        carregadas++;
-        if(carregadas === 1){
-          document.getElementById('loader').classList.remove('on');
-          btn.disabled = false;
-          document.getElementById('results').classList.add('show');
-          document.getElementById('actionsRow').innerHTML = `
-            <button class="btn-a primary" onclick="gerar()">🔄 Gerar novas</button>
-            <button class="btn-a" onclick="regenerar()">✨ Variações</button>`;
-          document.getElementById('promptUsed').textContent = '📝 Prompt: ' + prompt;
-        }
-      };
-      img.onerror = () => {
-        card.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--danger);font-size:.8rem;flex-direction:column;gap:.4rem">⚠️<span>Falhou — tente novamente</span></div>`;
-        carregadas++;
-        if(carregadas === urls.length && carregadas === 0){
-          document.getElementById('loader').classList.remove('on');
-          btn.disabled = false;
-        }
-      };
-      img.src = url;
-    });
-
-    // Timeout de segurança: 90s
-    setTimeout(() => {
-      document.getElementById('loader').classList.remove('on');
-      btn.disabled = false;
-      if(!document.getElementById('results').classList.contains('show')){
-        document.getElementById('results').classList.add('show');
-        document.getElementById('actionsRow').innerHTML = `<button class="btn-a primary" onclick="gerar()">🔄 Tentar novamente</button>`;
-      }
-    }, 90000);
+    document.getElementById('loader').classList.toggle('on', on);
+    document.getElementById('btnImg').disabled = on;
+    document.getElementById('btnVid').disabled = on;
   }
 
-  // Gera novas variações da mesma personagem (mesmo prompt, seeds diferentes)
-  function regenerar(){
-    const qtd = parseInt(document.getElementById('qtd').value);
-    const newSeeds = Array.from({length: qtd}, () => Math.floor(Math.random() * 9999999));
-    const grid = document.getElementById('imgGrid');
+  async function gerarImagem(){
+    setLoading(true);
+    document.getElementById('loaderMsg').innerHTML = '🖼️ Gerando imagem...<br><small>FLUX Schnell · ~15 segundos</small>';
+    const prompt = buildPrompt();
+    try {
+      const res = await fetch('/api/generate', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ prompt, model:'flux-schnell' }),
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error);
 
-    // Troca apenas os seeds, mantendo prompt
-    const cards = grid.querySelectorAll('.img-card');
-    newSeeds.forEach((seed, i) => {
-      if(cards[i]){
-        const url = makeImageUrl(lastPrompt, seed);
-        const img = cards[i].querySelector('img');
-        const a = cards[i].querySelector('a');
-        img.src = url;
-        if(a){ a.href = url; }
-      } else {
-        const card = document.createElement('div');
-        card.className = 'img-card';
-        const url = makeImageUrl(lastPrompt, seed);
-        card.innerHTML = `
-          <img src="${url}" alt="Imagem variação" loading="lazy" />
+      document.getElementById('mediaContainer').innerHTML = data.images.map((url,i) => `
+        <div class="img-card">
+          <img src="${url}" alt="Imagem ${i+1}" />
           <div class="overlay">
-            <a href="${url}" download="ai-creator.jpg" target="_blank" style="color:#fff;text-decoration:none">⬇️ Baixar</a>
-          </div>`;
-        grid.appendChild(card);
-      }
-    });
-    lastSeeds = newSeeds;
+            <a href="${url}" download class="ovr-btn" target="_blank">⬇️ Baixar</a>
+            <a href="${url}" target="_blank" class="ovr-btn">🔍 Ver</a>
+          </div>
+        </div>`).join('');
+
+      document.getElementById('actionsRow').innerHTML = `
+        <button class="btn-a primary" onclick="gerarImagem()">🔄 Nova imagem</button>
+        <button class="btn-a vid" onclick="gerarVideo()" style="border-color:#818cf8;color:#c084fc">🎬 Gerar vídeo dessa cena</button>`;
+      document.getElementById('promptUsed').textContent = '📝 ' + prompt;
+      document.getElementById('results').classList.add('show');
+    } catch(e){
+      document.getElementById('mediaContainer').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
+      document.getElementById('results').classList.add('show');
+    } finally { setLoading(false); }
+  }
+
+  async function gerarVideo(){
+    setLoading(true);
+    document.getElementById('loaderMsg').innerHTML = '🎬 Gerando vídeo...<br><small>MiniMax Video · ~2–4 minutos</small>';
+    const prompt = buildPrompt();
+    try {
+      const res = await fetch('/api/video', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ prompt, model:'minimax' }),
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error);
+
+      document.getElementById('mediaContainer').innerHTML = `
+        <div class="img-card">
+          <video src="${data.video}" controls autoplay loop muted playsinline></video>
+          <div class="overlay">
+            <a href="${data.video}" download class="ovr-btn" target="_blank">⬇️ Baixar vídeo</a>
+          </div>
+        </div>`;
+
+      document.getElementById('actionsRow').innerHTML = `
+        <button class="btn-a primary" onclick="gerarVideo()">🔄 Novo vídeo</button>
+        <button class="btn-a" onclick="gerarImagem()">🖼️ Gerar imagem</button>`;
+      document.getElementById('promptUsed').textContent = '📝 ' + prompt;
+      document.getElementById('results').classList.add('show');
+    } catch(e){
+      document.getElementById('mediaContainer').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
+      document.getElementById('results').classList.add('show');
+    } finally { setLoading(false); }
   }
 </script>
 </body>
