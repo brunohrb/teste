@@ -219,6 +219,19 @@
   const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+  // Tradução PT → EN para o modelo entender
+  const T = {
+    etnia:  { 'Brasileira':'Brazilian','Europeia':'European','Latina':'Latina','Asiática':'Asian','Negra':'Black','Árabe':'Middle Eastern' },
+    corpo:  { 'Magra':'slim body','Atlética':'athletic toned body','Curvilínea':'curvy voluptuous body','Plus size':'plus-size body','Petite':'petite body' },
+    seios:  { 'Pequenos':'small breasts','Médios':'medium breasts','Grandes':'large breasts','Enormes':'very large breasts' },
+    cabelo: { 'Loiro longo':'long straight blonde hair','Loiro curto':'short blonde hair','Castanho':'long brunette hair','Preto':'long black hair','Ruivo':'long red hair','Cacheado':'curly hair' },
+    olhos:  { 'Castanhos':'brown eyes','Verdes':'green eyes','Azuis':'blue eyes','Mel':'hazel eyes','Pretos':'dark eyes' },
+    roupa:  { 'Lingerie':'wearing sexy lingerie','Biquíni':'wearing tiny bikini','Vestido curto':'wearing short tight dress','Topless':'topless','Nua':'fully nude' },
+    pose:   { 'Deitada sedutora':'lying on bed seductively','Em pé sensual':'standing sensually','Olhando câmera':'looking seductively at camera','De costas':'seen from behind','Dançando':'dancing sensually','Se tocando':'touching herself sensually' },
+    amb:    { 'Quarto sensual':'in a dimly lit sensual bedroom','Piscina':'by a pool','Praia':'on the beach','Escritório':'in an office','Banheiro / Ducha':'in a bathroom shower','Sala de estar':'in a living room' },
+  };
+  const tr = (group, val) => T[group]?.[val] || val;
+
   async function testar(){
     const key = $key.value.trim();
     const el = document.getElementById('keyStatus');
@@ -234,19 +247,25 @@
     } catch(e){ el.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`; }
   }
 
-  function buildPrompt(){
+  function buildPrompt(forVideo = false){
+    const etnia   = tr('etnia',  chip('etnia'));
+    const corpo   = tr('corpo',  document.getElementById('corporal').value);
+    const seios   = tr('seios',  document.getElementById('seios').value);
+    const cabelo  = tr('cabelo', chip('cabelo'));
+    const olhos   = tr('olhos',  chip('olhos'));
+    const roupa   = forVideo
+      ? tr('roupa', chip('roupa')).replace('fully nude','wearing lingerie').replace('topless','wearing bra')
+      : tr('roupa', chip('roupa'));
+    const pose    = tr('pose',   chip('pose'));
+    const amb     = tr('amb',    document.getElementById('ambiente').value);
+    const extras  = document.getElementById('extras').value;
+
     return [
-      'photorealistic beautiful woman',
-      chip('etnia') && chip('etnia')+' woman',
-      document.getElementById('corporal').value,
-      document.getElementById('seios').value && document.getElementById('seios').value+' breasts',
-      chip('cabelo') && chip('cabelo')+' hair',
-      chip('olhos') && chip('olhos')+' eyes',
-      chip('roupa'),
-      chip('pose'),
-      document.getElementById('ambiente').value && 'in '+document.getElementById('ambiente').value,
-      document.getElementById('extras').value,
-      '8k uhd, highly detailed, cinematic lighting, hyperrealistic, sharp focus',
+      'RAW photo, photorealistic',
+      etnia && etnia+' woman',
+      corpo, seios, cabelo, olhos,
+      roupa, pose, amb, extras,
+      'ultra detailed skin, 8k uhd, DSLR, sharp focus, cinematic lighting, professional photography',
     ].filter(Boolean).join(', ');
   }
 
@@ -290,22 +309,28 @@
     document.getElementById('progFill').style.width = '100%';
   }
 
+  let lastImageUrl = null;
+
   async function gerarImagem(){
     const key = $key.value.trim();
     if(!key){ alert('Cole seu token do Replicate no campo acima.\nPegue em: replicate.com/account/api-tokens'); return; }
     setUI(true);
-    document.getElementById('lmsg').innerHTML = '🖼️ Gerando imagem...<br><small>FLUX Schnell · ~15 segundos</small>';
+    document.getElementById('lmsg').innerHTML = '🖼️ Gerando imagem...<br><small>FLUX Dev · ~30 segundos</small>';
     const prompt = buildPrompt();
     try {
-      const output = await replicate('black-forest-labs/flux-schnell', {
+      const output = await replicate('black-forest-labs/flux-dev', {
         prompt,
         aspect_ratio: '3:4',
-        output_format: 'webp',
-        output_quality: 90,
+        output_format: 'jpg',
+        output_quality: 95,
+        guidance: 3.5,
+        num_inference_steps: 28,
         disable_safety_checker: true,
       }, p => document.getElementById('progFill').style.width = p+'%');
 
       const urls = Array.isArray(output) ? output : [output];
+      lastImageUrl = urls[0];
+
       const cards = urls.map((url,i) => `
         <div class="media-card">
           <img src="${url}" alt="imagem ${i+1}" />
@@ -319,7 +344,7 @@
         ${cards}
         <div class="acts">
           <button class="btn-a p" onclick="gerarImagem()">🔄 Nova imagem</button>
-          <button class="btn-a" onclick="gerarVideo()" style="border-color:#818cf8;color:#a78bfa">🎬 Gerar vídeo dessa cena</button>
+          <button class="btn-a" onclick="animarVideo()" style="border-color:#818cf8;color:#a78bfa">🎬 Animar esta imagem</button>
         </div>`, prompt);
     } catch(e){
       document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
@@ -327,15 +352,23 @@
   }
 
   async function gerarVideo(){
+    // Gera imagem primeiro, depois anima
+    await gerarImagem();
+    if(lastImageUrl) await animarVideo();
+  }
+
+  async function animarVideo(){
     const key = $key.value.trim();
-    if(!key){ alert('Cole seu token do Replicate no campo acima.'); return; }
+    if(!key || !lastImageUrl) return;
     setUI(true);
-    document.getElementById('lmsg').innerHTML = '🎬 Gerando vídeo...<br><small>MiniMax Video · 2–4 minutos</small>';
-    const prompt = buildPrompt();
+    document.getElementById('lmsg').innerHTML = '🎬 Animando imagem em vídeo...<br><small>Stable Video Diffusion · ~2 minutos</small>';
     try {
-      const output = await replicate('minimax/video-01', {
-        prompt,
-        prompt_optimizer: true,
+      const output = await replicate('stability-ai/stable-video-diffusion', {
+        input_image: lastImageUrl,
+        sizing_strategy: 'maintain_aspect_ratio',
+        motion_bucket_id: 127,
+        fps: 8,
+        cond_aug: 0.02,
       }, p => document.getElementById('progFill').style.width = p+'%');
 
       const url = Array.isArray(output) ? output[0] : output;
@@ -347,9 +380,10 @@
           </div>
         </div>
         <div class="acts">
-          <button class="btn-a p" onclick="gerarVideo()">🔄 Novo vídeo</button>
-          <button class="btn-a" onclick="gerarImagem()">🖼️ Gerar imagem</button>
-        </div>`, prompt);
+          <button class="btn-a p" onclick="animarVideo()">🔄 Reanimar</button>
+          <button class="btn-a" onclick="gerarImagem()">🖼️ Nova imagem</button>
+          <button class="btn-a" onclick="gerarVideo()">🎬 Tudo de novo</button>
+        </div>`, 'Vídeo gerado a partir da imagem anterior');
     } catch(e){
       document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
     } finally { setUI(false); }
