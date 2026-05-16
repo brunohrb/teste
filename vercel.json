@@ -1,5 +1,14 @@
 {
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  "version": 2,
+  "functions": {
+    "api/generate.js": { "runtime": "nodejs18.x" },
+    "api/video.js":    { "runtime": "nodejs18.x" },
+    "api/poll.js":     { "runtime": "nodejs18.x" }
+  },
+  "routes": [
+    { "src": "/api/generate", "dest": "/api/generate.js" },
+    { "src": "/api/video",    "dest": "/api/video.js" },
+    { "src": "/api/poll",     "dest": "/api/poll.js" },
+    { "src": "/(.*)",         "dest": "/index.html" }
   ]
 }
