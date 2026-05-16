@@ -232,9 +232,9 @@
 
 <!-- API Key -->
 <div class="api-bar">
-  <label>🔑 Token Replicate:</label>
-  <input type="password" id="apiKey" placeholder="r8_..." oninput="saveKey()" />
-  <small>Pegue em <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com/account/api-tokens</a> · Salvo só no seu navegador.</small>
+  <label>🔑 Chave Groq (grátis):</label>
+  <input type="password" id="apiKey" placeholder="gsk_..." oninput="saveKey()" />
+  <small>Crie sua chave grátis em <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> · Salvo só no seu navegador.</small>
 </div>
 
 <div class="container">
@@ -449,41 +449,29 @@ Extras: ${document.getElementById('extras').value || 'nenhum'}
 Escreva uma narrativa adulta (+18), sensual, detalhada e explícita com pelo menos 400 palavras. Seja literário, criativo e apaixonante.`;
 
     try {
-      // Cria a predição no Replicate (Prefer: wait faz ele aguardar o resultado)
-      const res = await fetch('https://api.replicate.com/v1/models/meta/meta-llama-3-70b-instruct/predictions', {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${key}`,
           'Content-Type': 'application/json',
-          'Prefer': 'wait=60',
         },
         body: JSON.stringify({
-          input: {
-            prompt: userMsg,
-            max_new_tokens: 2048,
-            temperature: 0.9,
-            top_p: 0.95,
-          },
+          model: 'llama-3.3-70b-versatile',
+          messages: [{ role: 'user', content: userMsg }],
+          max_tokens: 2048,
+          temperature: 0.9,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok || data.error) {
-        result.innerHTML = `<div class="err">⚠️ ${data.error || data.detail || JSON.stringify(data)}</div>`;
-      } else if (data.status === 'succeeded') {
-        const text = Array.isArray(data.output) ? data.output.join('') : data.output;
-        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Llama 3 70B via Replicate ✦ ${text.length} caracteres</p>`;
-        document.getElementById('btn-copy').style.display = 'flex';
-        document.getElementById('btn-clear').style.display = 'flex';
-      } else if (data.urls?.get) {
-        // Fallback: polling se não retornou em 60s
-        const text = await pollResult(data.urls.get, key);
-        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Llama 3 70B via Replicate ✦ ${text.length} caracteres</p>`;
-        document.getElementById('btn-copy').style.display = 'flex';
-        document.getElementById('btn-clear').style.display = 'flex';
+        result.innerHTML = `<div class="err">⚠️ ${data.error?.message || JSON.stringify(data)}</div>`;
       } else {
-        result.innerHTML = `<div class="err">⚠️ Resposta inesperada: ${JSON.stringify(data)}</div>`;
+        const text = data.choices[0].message.content;
+        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Llama 3.3 70B via Groq ✦ ${text.length} caracteres</p>`;
+        document.getElementById('btn-copy').style.display = 'flex';
+        document.getElementById('btn-clear').style.display = 'flex';
       }
     } catch (e) {
       result.innerHTML = `<div class="err">⚠️ Erro: ${e.message}</div>`;
@@ -495,16 +483,6 @@ Escreva uma narrativa adulta (+18), sensual, detalhada e explícita com pelo men
 
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  async function pollResult(url, key) {
-    for (let i = 0; i < 60; i++) {
-      await new Promise(r => setTimeout(r, 3000));
-      const r = await fetch(url, { headers: { 'Authorization': `Bearer ${key}` } });
-      const d = await r.json();
-      if (d.status === 'succeeded') return Array.isArray(d.output) ? d.output.join('') : d.output;
-      if (d.status === 'failed') throw new Error(d.error || 'Falhou');
-    }
-    throw new Error('Tempo esgotado');
-  }
 
   async function copyText() {
     const t = document.querySelector('.card')?.textContent;
