@@ -19,16 +19,6 @@
     header p{font-size:.73rem;color:var(--muted);margin-top:2px}
     .badge{margin-left:auto;background:#7f1d1d;color:#fca5a5;font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:6px;letter-spacing:.05em}
 
-    .api-bar{background:#111114;border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
-    .api-bar label{font-size:.78rem;color:var(--muted);white-space:nowrap}
-    .api-bar input{flex:1;min-width:220px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;padding:.42rem .7rem;outline:none;font-family:monospace;transition:border-color .2s}
-    .api-bar input:focus{border-color:var(--accent)}
-    .btn-test{background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--muted);padding:.38rem .8rem;font-size:.78rem;cursor:pointer;white-space:nowrap;transition:all .15s}
-    .btn-test:hover{border-color:var(--accent);color:var(--accent)}
-    .api-bar small{font-size:.72rem;color:var(--muted)}
-    .api-bar a{color:var(--accent);text-decoration:none}
-    #keyStatus{font-size:.78rem;white-space:nowrap}
-
     .wrap{display:grid;grid-template-columns:370px 1fr;flex:1}
 
     aside{background:var(--surface);border-right:1px solid var(--border);padding:1.25rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.1rem}
@@ -46,19 +36,11 @@
     .chip:hover{border-color:var(--accent);color:var(--accent)}
     .chip.on{background:var(--glow);border-color:var(--accent);color:var(--accent2)}
 
-    .btn-gen{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:10px;padding:.8rem;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;transition:opacity .2s,transform .1s;box-shadow:0 4px 20px var(--glow);margin-top:.25rem}
+    .btn-gen{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:10px;padding:.8rem;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;transition:opacity .2s,transform .1s;box-shadow:0 4px 20px var(--glow);margin-top:.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
     .btn-gen:hover{opacity:.9}.btn-gen:active{transform:scale(.98)}.btn-gen:disabled{opacity:.4;cursor:not-allowed}
 
-    main{display:flex;flex-direction:column}
-    .steps{display:flex;border-bottom:1px solid var(--border);background:var(--surface)}
-    .step{flex:1;padding:.85rem 1rem;text-align:center;font-size:.8rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem}
-    .step.active{color:var(--accent);border-bottom-color:var(--accent)}
-    .step .num{width:22px;height:22px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem}
-    .step.active .num{background:var(--glow);border-color:var(--accent);color:var(--accent)}
-    .step.done .num{background:#14532d;border-color:var(--success);color:var(--success)}
-
+    main{display:flex;flex-direction:column;overflow:hidden}
     .out-body{flex:1;overflow-y:auto;padding:1.75rem;background:var(--bg);min-height:400px}
-    .panel{display:none}.panel.active{display:block}
 
     .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;min-height:340px;color:var(--muted);text-align:center}
     .empty .ico{font-size:3rem;opacity:.35}
@@ -70,18 +52,22 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     .loader-msg{font-size:.88rem;line-height:1.8}
 
-    .img-result{max-width:680px;margin:0 auto}
-    .img-result img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;animation:fadeIn .4s ease}
-    .vid-result{max-width:680px;margin:0 auto}
-    .vid-result video{width:100%;border-radius:12px;border:1px solid var(--border);display:block;animation:fadeIn .4s ease}
-    .actions{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+    .results{display:none;max-width:720px;margin:0 auto}
+    .results.show{display:block;animation:fadeIn .4s ease}
+    .img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-bottom:1rem}
+    .img-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface2);cursor:pointer}
+    .img-card img{width:100%;display:block;transition:transform .3s}
+    .img-card:hover img{transform:scale(1.02)}
+    .img-card .overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;display:flex;align-items:center;justify-content:center;transition:opacity .2s;font-size:.85rem;color:#fff;gap:.5rem}
+    .img-card:hover .overlay{opacity:1}
+
+    .actions{display:flex;gap:.6rem;flex-wrap:wrap}
     .btn-a{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem 1rem;font-size:.82rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.4rem;text-decoration:none}
     .btn-a:hover{border-color:var(--accent);color:var(--accent)}
     .btn-a.primary{background:linear-gradient(135deg,var(--accent),#818cf8);border:none;color:#fff;font-weight:700}
     .btn-a.primary:hover{opacity:.9;color:#fff}
 
-    .err{background:#1f0808;border:1px solid #7f1d1d;border-radius:10px;color:var(--danger);padding:.9rem 1.1rem;font-size:.86rem;max-width:680px;margin:0 auto}
-    .info-box{background:#0f172a;border:1px solid #1e3a5f;border-radius:10px;color:#93c5fd;padding:.9rem 1.1rem;font-size:.84rem;max-width:680px;margin:0 auto;line-height:1.7}
+    .prompt-used{font-size:.72rem;color:var(--muted);margin-top:1rem;padding:.75rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);line-height:1.6;word-break:break-word}
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     @media(max-width:720px){.wrap{grid-template-columns:1fr}aside{border-right:none;border-bottom:1px solid var(--border)}}
@@ -93,21 +79,10 @@
   <div class="logo">✨</div>
   <div>
     <h1>AI Creator</h1>
-    <p>Gera imagem → anima em vídeo · Powered by Hugging Face (grátis)</p>
+    <p>Gerador de imagens com IA · Grátis · Sem cadastro</p>
   </div>
   <span class="badge">+18</span>
 </header>
-
-<div class="api-bar">
-  <label>🔑 Token Hugging Face:</label>
-  <input type="password" id="apiKey" placeholder="hf_..." oninput="saveKey()" />
-  <button class="btn-test" onclick="testarChave()">Testar</button>
-  <span id="keyStatus"></span>
-  <small>
-    Grátis em <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co/settings/tokens</a>
-    → clique <strong>New token</strong> → tipo <strong>Read</strong> → copie e cole aqui
-  </small>
-</div>
 
 <div class="wrap">
   <aside>
@@ -208,43 +183,55 @@
     </div>
 
     <div>
+      <div class="stitle">Modelo de IA</div>
+      <div class="fg">
+        <select id="modelo">
+          <option value="flux-realism">FLUX Realism — Ultra realista</option>
+          <option value="flux">FLUX — Alta qualidade</option>
+          <option value="turbo">Turbo — Rápido</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <div class="stitle">Quantidade</div>
+      <div class="fg">
+        <select id="qtd">
+          <option value="1">1 imagem</option>
+          <option value="2">2 imagens</option>
+          <option value="4" selected>4 imagens</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
       <div class="stitle">Extras</div>
       <div class="fg"><textarea id="extras" placeholder="Detalhes adicionais, fetiches, acessórios..."></textarea></div>
     </div>
 
-    <button class="btn-gen" id="btnGen" onclick="gerarImagem()">✨ Gerar Imagem</button>
+    <button class="btn-gen" id="btnGen" onclick="gerar()">
+      <span>✨</span> Gerar Imagens
+    </button>
 
   </aside>
 
   <main>
-    <div class="steps">
-      <div class="step active" id="tab1" onclick="showTab(1)"><span class="num" id="n1">1</span> Gerar Imagem</div>
-      <div class="step" id="tab2" onclick="showTab(2)"><span class="num" id="n2">2</span> Animar em Vídeo</div>
-    </div>
     <div class="out-body">
 
-      <div class="panel active" id="panel1">
-        <div class="empty" id="emptyImg">
-          <div class="ico">🖼️</div>
-          <p>Configure a personagem ao lado e clique em <strong>Gerar Imagem</strong>.</p>
-        </div>
-        <div class="loader" id="loaderImg">
-          <div class="spinner"></div>
-          <div class="loader-msg" id="msgImg">Gerando imagem...<br><small>Aguarde ~20–40 segundos</small></div>
-        </div>
-        <div id="resultImg" style="display:none"></div>
+      <div class="empty" id="empty">
+        <div class="ico">🖼️</div>
+        <p>Configure a personagem ao lado e clique em <strong>Gerar Imagens</strong>.<br><br>Grátis, sem cadastro, sem chave de API.</p>
       </div>
 
-      <div class="panel" id="panel2">
-        <div class="empty" id="emptyVid">
-          <div class="ico">🎬</div>
-          <p>Gere uma imagem primeiro, depois clique em <strong>Animar em vídeo</strong>.</p>
-        </div>
-        <div class="loader" id="loaderVid">
-          <div class="spinner"></div>
-          <div class="loader-msg">Animando em vídeo...<br><small>Pode levar 2–5 minutos</small></div>
-        </div>
-        <div id="resultVid" style="display:none"></div>
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-msg" id="loaderMsg">Gerando imagens...<br><small>Aguarde ~20 segundos</small></div>
+      </div>
+
+      <div class="results" id="results">
+        <div class="img-grid" id="imgGrid"></div>
+        <div class="actions" id="actionsRow"></div>
+        <div class="prompt-used" id="promptUsed"></div>
       </div>
 
     </div>
@@ -252,10 +239,6 @@
 </div>
 
 <script>
-  const $key = document.getElementById('apiKey');
-  $key.value = localStorage.getItem('hf_key') || '';
-  function saveKey(){ localStorage.setItem('hf_key', $key.value.trim()) }
-
   document.querySelectorAll('.chip').forEach(c => {
     c.addEventListener('click', () => {
       const g = c.dataset.g;
@@ -265,16 +248,10 @@
   });
   const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
 
-  function showTab(n){
-    [1,2].forEach(i => {
-      document.getElementById(`panel${i}`).classList.toggle('active', i===n);
-      document.getElementById(`tab${i}`).classList.toggle('active', i===n);
-    });
-  }
-
   function buildPrompt(){
     const parts = [
-      'photorealistic, beautiful woman',
+      'photorealistic',
+      'beautiful woman',
       chip('etnia') ? chip('etnia')+' woman' : '',
       document.getElementById('corporal').value,
       document.getElementById('seios').value ? document.getElementById('seios').value+' breasts' : '',
@@ -289,167 +266,104 @@
     return parts.join(', ');
   }
 
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const neg = 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, extra limbs, cartoon, anime';
 
-  /* ── Hugging Face fetch com retry (modelo pode estar carregando) ── */
-  async function hfFetch(url, opts, maxTries = 8){
-    for(let i = 0; i < maxTries; i++){
-      const r = await fetch(url, opts);
-      if(r.status === 503){
-        const j = await r.json().catch(()=>({}));
-        const wait = Math.min((j.estimated_time || 20) * 1000, 30000);
-        document.getElementById('msgImg').innerHTML = `Modelo carregando...<br><small>Aguarde ~${Math.round(wait/1000)}s</small>`;
-        await sleep(wait);
-        continue;
-      }
-      return r;
-    }
-    throw new Error('Modelo não carregou. Tente novamente em instantes.');
+  function makeImageUrl(prompt, seed){
+    const model = document.getElementById('modelo').value;
+    const p = encodeURIComponent(prompt);
+    const n = encodeURIComponent(neg);
+    return `https://image.pollinations.ai/prompt/${p}?width=768&height=1024&model=${model}&seed=${seed}&nologo=true&enhance=true&negative=${n}`;
   }
 
-  async function testarChave(){
-    const key = $key.value.trim();
-    const el = document.getElementById('keyStatus');
-    if(!key){ el.innerHTML = '<span style="color:var(--danger)">⚠️ Cole o token primeiro</span>'; return; }
-    el.innerHTML = '<span style="color:var(--muted)">Testando...</span>';
-    try {
-      const r = await fetch('https://huggingface.co/api/whoami-v2', {
-        headers:{ 'Authorization': `Bearer ${key}` }
-      });
-      if(r.ok){
-        const d = await r.json();
-        el.innerHTML = `<span style="color:var(--success)">✅ Logado como <strong>${d.name}</strong></span>`;
-      } else {
-        el.innerHTML = '<span style="color:var(--danger)">❌ Token inválido</span>';
-      }
-    } catch(e){
-      el.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`;
-    }
-  }
+  let lastPrompt = '';
+  let lastSeeds = [];
 
-  let imageBlob = null;
-  let imgUrl = null;
-
-  async function gerarImagem(){
-    const key = $key.value.trim();
-    if(!key){ alert('Cole seu token do Hugging Face no campo acima.\n\nCrie em: huggingface.co/settings/tokens'); return; }
-
+  async function gerar(){
     const btn = document.getElementById('btnGen');
     btn.disabled = true;
-    showTab(1);
-    document.getElementById('emptyImg').style.display = 'none';
-    document.getElementById('resultImg').style.display = 'none';
-    document.getElementById('loaderImg').classList.add('on');
-    document.getElementById('msgImg').innerHTML = 'Gerando imagem...<br><small>Aguarde ~20–40 segundos</small>';
+
+    document.getElementById('empty').style.display = 'none';
+    document.getElementById('results').classList.remove('show');
+    document.getElementById('loader').classList.add('on');
+
+    const prompt = buildPrompt();
+    lastPrompt = prompt;
+    const qtd = parseInt(document.getElementById('qtd').value);
+    lastSeeds = Array.from({length: qtd}, () => Math.floor(Math.random() * 9999999));
+
+    document.getElementById('loaderMsg').innerHTML =
+      `Gerando ${qtd} imagem${qtd>1?'s':''}...<br><small>Aguarde ~${qtd*8} segundos</small>`;
 
     try {
-      const prompt = buildPrompt();
+      const urls = lastSeeds.map(s => makeImageUrl(prompt, s));
 
-      const res = await hfFetch(
-        'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': 'application/json',
-            'x-use-cache': 'false',
-          },
-          body: JSON.stringify({
-            inputs: prompt,
-            parameters: { width: 768, height: 1024 },
-          }),
-        }
-      );
+      // Carrega todas as imagens em paralelo
+      await Promise.all(urls.map(url => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = url;
+      })));
 
-      if(!res.ok){
-        const err = await res.json().catch(()=>({}));
-        throw new Error(err.error || `Erro ${res.status}`);
-      }
+      // Monta o grid
+      const grid = document.getElementById('imgGrid');
+      grid.innerHTML = '';
+      urls.forEach((url, i) => {
+        const card = document.createElement('div');
+        card.className = 'img-card';
+        card.innerHTML = `
+          <img src="${url}" alt="Imagem ${i+1}" loading="lazy" />
+          <div class="overlay">
+            <a href="${url}" download="ai-creator-${i+1}.jpg" target="_blank" style="color:#fff;text-decoration:none">⬇️ Baixar</a>
+          </div>`;
+        grid.appendChild(card);
+      });
 
-      imageBlob = await res.blob();
-      imgUrl = URL.createObjectURL(imageBlob);
+      document.getElementById('actionsRow').innerHTML = `
+        <button class="btn-a primary" onclick="gerar()">🔄 Gerar novas</button>
+        <button class="btn-a" onclick="regenerar()">✨ Mesma personagem, imagens diferentes</button>`;
 
-      document.getElementById('resultImg').innerHTML = `
-        <div class="img-result">
-          <img src="${imgUrl}" alt="Imagem gerada" />
-          <div class="actions">
-            <a class="btn-a" href="${imgUrl}" download="ai-creator.jpg">⬇️ Baixar imagem</a>
-            <button class="btn-a primary" onclick="animarVideo()">🎬 Animar em vídeo →</button>
-            <button class="btn-a" onclick="gerarImagem()">🔄 Gerar outra</button>
-          </div>
-        </div>`;
-      document.getElementById('resultImg').style.display = 'block';
-      document.getElementById('n1').textContent = '✓';
-      document.getElementById('tab1').classList.add('done');
+      document.getElementById('promptUsed').textContent = '📝 Prompt: ' + prompt;
 
-    } catch(e){
-      document.getElementById('resultImg').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
-      document.getElementById('resultImg').style.display = 'block';
+      document.getElementById('results').classList.add('show');
+
+    } catch(e) {
+      document.getElementById('empty').style.display = 'flex';
+      document.getElementById('empty').innerHTML = `<div class="ico">⚠️</div><p style="color:var(--danger)">Erro ao gerar: ${e.message}<br><br><button onclick="gerar()" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem 1rem;cursor:pointer">Tentar novamente</button></p>`;
     } finally {
-      document.getElementById('loaderImg').classList.remove('on');
+      document.getElementById('loader').classList.remove('on');
       btn.disabled = false;
     }
   }
 
-  async function animarVideo(){
-    const key = $key.value.trim();
-    if(!key || !imageBlob){ return; }
+  // Gera novas variações da mesma personagem (mesmo prompt, seeds diferentes)
+  function regenerar(){
+    const qtd = parseInt(document.getElementById('qtd').value);
+    const newSeeds = Array.from({length: qtd}, () => Math.floor(Math.random() * 9999999));
+    const grid = document.getElementById('imgGrid');
 
-    showTab(2);
-    document.getElementById('emptyVid').style.display = 'none';
-    document.getElementById('resultVid').style.display = 'none';
-    document.getElementById('loaderVid').classList.add('on');
-
-    try {
-      const res = await fetch(
-        'https://api-inference.huggingface.co/models/stabilityai/stable-video-diffusion-img2vid-xt',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': imageBlob.type || 'image/jpeg',
-          },
-          body: imageBlob,
-        }
-      );
-
-      if(res.status === 503){
-        document.getElementById('resultVid').innerHTML = `
-          <div class="info-box">
-            ℹ️ O modelo de vídeo está carregando no servidor do Hugging Face (pode levar alguns minutos na primeira vez).<br><br>
-            Aguarde 2 minutos e clique em <strong>Animar em vídeo</strong> novamente.
+    // Troca apenas os seeds, mantendo prompt
+    const cards = grid.querySelectorAll('.img-card');
+    newSeeds.forEach((seed, i) => {
+      if(cards[i]){
+        const url = makeImageUrl(lastPrompt, seed);
+        const img = cards[i].querySelector('img');
+        const a = cards[i].querySelector('a');
+        img.src = url;
+        if(a){ a.href = url; }
+      } else {
+        const card = document.createElement('div');
+        card.className = 'img-card';
+        const url = makeImageUrl(lastPrompt, seed);
+        card.innerHTML = `
+          <img src="${url}" alt="Imagem variação" loading="lazy" />
+          <div class="overlay">
+            <a href="${url}" download="ai-creator.jpg" target="_blank" style="color:#fff;text-decoration:none">⬇️ Baixar</a>
           </div>`;
-        document.getElementById('resultVid').style.display = 'block';
-        document.getElementById('loaderVid').classList.remove('on');
-        return;
+        grid.appendChild(card);
       }
-
-      if(!res.ok){
-        const err = await res.json().catch(()=>({}));
-        throw new Error(err.error || `Erro ${res.status}`);
-      }
-
-      const videoBlob = await res.blob();
-      const videoUrl = URL.createObjectURL(videoBlob);
-
-      document.getElementById('resultVid').innerHTML = `
-        <div class="vid-result">
-          <video src="${videoUrl}" controls autoplay loop muted playsinline></video>
-          <div class="actions">
-            <a class="btn-a" href="${videoUrl}" download="ai-creator.mp4">⬇️ Baixar vídeo</a>
-            <button class="btn-a" onclick="showTab(1)">← Voltar à imagem</button>
-          </div>
-        </div>`;
-      document.getElementById('resultVid').style.display = 'block';
-      document.getElementById('n2').textContent = '✓';
-      document.getElementById('tab2').classList.add('done');
-
-    } catch(e){
-      document.getElementById('resultVid').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
-      document.getElementById('resultVid').style.display = 'block';
-    } finally {
-      document.getElementById('loaderVid').classList.remove('on');
-    }
+    });
+    lastSeeds = newSeeds;
   }
 </script>
 </body>
