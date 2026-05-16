@@ -103,8 +103,10 @@
 
 <div class="api-bar">
   <label>🔑 Chave fal.ai:</label>
-  <input type="password" id="apiKey" placeholder="Sua chave fal.ai..." oninput="saveKey()" />
-  <small>Grátis em <a href="https://fal.ai/dashboard/keys" target="_blank">fal.ai/dashboard/keys</a> · Salvo só no seu navegador</small>
+  <input type="password" id="apiKey" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx:xxxxxxx..." oninput="saveKey()" />
+  <button onclick="testarChave()" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--muted);padding:.38rem .8rem;font-size:.78rem;cursor:pointer;white-space:nowrap">Testar chave</button>
+  <span id="keyStatus"></span>
+  <small>1. Crie conta em <a href="https://fal.ai" target="_blank">fal.ai</a> &nbsp;2. Acesse <a href="https://fal.ai/dashboard/keys" target="_blank">fal.ai/dashboard/keys</a> &nbsp;3. Clique em <strong>Add key</strong> e cole aqui</small>
 </div>
 
 <div class="wrap">
@@ -278,6 +280,28 @@
   $key.value = localStorage.getItem('fal_key') || '';
   function saveKey(){ localStorage.setItem('fal_key', $key.value.trim()) }
 
+  async function testarChave(){
+    const key = $key.value.trim();
+    const el = document.getElementById('keyStatus');
+    if(!key){ el.innerHTML = '<span style="color:#f87171">⚠️ Cole sua chave primeiro</span>'; return; }
+    el.innerHTML = '<span style="color:#71717a">Testando...</span>';
+    try {
+      const r = await fetch('https://fal.run/fal-ai/flux/schnell', {
+        method:'POST',
+        headers:{'Authorization':`Key ${key}`,'Content-Type':'application/json'},
+        body: JSON.stringify({prompt:'test',num_images:1,num_inference_steps:1}),
+      });
+      const d = await r.json();
+      if(r.status === 401 || d.detail?.includes('Authentication')){
+        el.innerHTML = '<span style="color:#f87171">❌ Chave inválida — verifique em fal.ai/dashboard/keys</span>';
+      } else {
+        el.innerHTML = '<span style="color:#34d399">✅ Chave válida!</span>';
+      }
+    } catch(e){
+      el.innerHTML = `<span style="color:#f87171">❌ Erro: ${e.message}</span>`;
+    }
+  }
+
   document.querySelectorAll('.chip').forEach(c => {
     c.addEventListener('click', () => {
       const g = c.dataset.g;
@@ -370,15 +394,26 @@
       const prompt = buildPrompt();
       const neg = 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, extra limbs, cartoon';
 
-      const data = await falRun(model, {
-        prompt,
-        negative_prompt: neg,
-        image_size: 'portrait_4_3',
-        num_inference_steps: model.includes('schnell') ? 4 : 28,
-        guidance_scale: 3.5,
-        num_images: 1,
-        enable_safety_checker: false,
-      }, key, document.getElementById('progImg'));
+      // imagem: chamada síncrona direto no fal.run
+      const imgRes = await fetch(`https://fal.run/${model}`, {
+        method:'POST',
+        headers:{'Authorization':`Key ${key}`,'Content-Type':'application/json'},
+        body: JSON.stringify({
+          prompt,
+          negative_prompt: neg,
+          image_size: 'portrait_4_3',
+          num_inference_steps: model.includes('schnell') ? 4 : 28,
+          guidance_scale: 3.5,
+          num_images: 1,
+          enable_safety_checker: false,
+        }),
+      });
+      document.getElementById('progImg').style.width = '90%';
+      if(!imgRes.ok){
+        const e = await imgRes.json();
+        throw new Error(e.detail || JSON.stringify(e));
+      }
+      const data = await imgRes.json();
 
       imgUrl = data.images?.[0]?.url || data.image?.url;
       if(!imgUrl) throw new Error('Imagem não retornada: '+JSON.stringify(data));
