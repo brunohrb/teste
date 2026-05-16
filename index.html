@@ -3,219 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Creator +18 — Replicate</title>
+  <title>AI Creator +18</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#0d0d0f;--surface:#18181b;--surface2:#222228;--border:#2e2e38;
+      --accent:#c084fc;--accent2:#f0abfc;--glow:rgba(192,132,252,.2);
+      --text:#f4f4f5;--muted:#71717a;--danger:#f87171;--success:#34d399;
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
 
-    :root {
-      --bg: #0d0d0f;
-      --surface: #18181b;
-      --surface2: #222228;
-      --border: #2e2e38;
-      --accent: #c084fc;
-      --accent2: #f0abfc;
-      --accent-glow: rgba(192,132,252,0.2);
-      --text: #f4f4f5;
-      --muted: #71717a;
-      --danger: #f87171;
-    }
+    /* header */
+    header{background:linear-gradient(135deg,#1a0d2e,#0d0d0f 70%);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:.9rem}
+    .logo{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),#818cf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 18px var(--glow)}
+    header h1{font-size:1.3rem;font-weight:700;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    header p{font-size:.73rem;color:var(--muted);margin-top:2px}
+    .badge{margin-left:auto;background:#7f1d1d;color:#fca5a5;font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:6px;letter-spacing:.05em}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      min-height: 100vh;
-    }
+    /* api bar */
+    .api-bar{background:#111114;border-bottom:1px solid var(--border);padding:.6rem 1.5rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+    .api-bar label{font-size:.78rem;color:var(--muted);white-space:nowrap}
+    .api-bar input{flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;padding:.42rem .7rem;outline:none;font-family:monospace;transition:border-color .2s}
+    .api-bar input:focus{border-color:var(--accent)}
+    .api-bar small{font-size:.72rem;color:var(--muted)}
+    .api-bar a{color:var(--accent);text-decoration:none}
 
-    /* ── Header ── */
-    header {
-      background: linear-gradient(135deg, #1a0d2e 0%, #0d0d0f 70%);
-      border-bottom: 1px solid var(--border);
-      padding: 1.2rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .logo {
-      width: 44px; height: 44px;
-      background: linear-gradient(135deg, var(--accent), #818cf8);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem;
-      box-shadow: 0 0 20px var(--accent-glow);
-    }
-    header h1 {
-      font-size: 1.4rem; font-weight: 700;
-      background: linear-gradient(90deg, var(--accent2), var(--accent));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    header p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-    .badge {
-      margin-left: auto;
-      background: #7f1d1d; color: #fca5a5;
-      font-size: 0.7rem; font-weight: 700;
-      padding: 0.25rem 0.65rem; border-radius: 6px; letter-spacing: 0.05em;
-    }
+    /* layout */
+    .wrap{display:grid;grid-template-columns:370px 1fr;flex:1;min-height:0}
 
-    /* ── API Key bar ── */
-    .api-bar {
-      background: #111114;
-      border-bottom: 1px solid var(--border);
-      padding: 0.65rem 2rem;
-      display: flex; align-items: center; gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-    .api-bar label { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
-    .api-bar input {
-      flex: 1; min-width: 200px;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text);
-      font-size: 0.85rem; padding: 0.45rem 0.75rem; outline: none;
-      font-family: monospace;
-      transition: border-color 0.2s;
-    }
-    .api-bar input:focus { border-color: var(--accent); }
-    .api-bar small { font-size: 0.72rem; color: var(--muted); }
-    .api-bar a { color: var(--accent); text-decoration: none; }
+    /* sidebar */
+    aside{background:var(--surface);border-right:1px solid var(--border);padding:1.25rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.1rem}
+    .stitle{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.35rem}
+    .fg{display:flex;flex-direction:column;gap:.28rem}
+    label{font-size:.8rem;color:var(--muted);font-weight:500}
+    input[type=text],input[type=number],select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.87rem;padding:.48rem .68rem;outline:none;width:100%;font-family:inherit;transition:border-color .2s,box-shadow .2s}
+    input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+    select option{background:var(--surface2)}
+    textarea{resize:vertical;min-height:70px}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
 
-    /* ── Layout ── */
-    .container {
-      display: grid;
-      grid-template-columns: 400px 1fr;
-      min-height: calc(100vh - 120px);
-    }
+    /* chips */
+    .chips{display:flex;flex-wrap:wrap;gap:.38rem}
+    .chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:.26rem .68rem;font-size:.75rem;cursor:pointer;transition:all .15s;user-select:none}
+    .chip:hover{border-color:var(--accent);color:var(--accent)}
+    .chip.on{background:var(--glow);border-color:var(--accent);color:var(--accent2)}
 
-    /* ── Sidebar ── */
-    .sidebar {
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 1.5rem;
-      overflow-y: auto;
-      display: flex; flex-direction: column; gap: 1.25rem;
-    }
-    .section-title {
-      font-size: 0.68rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--accent); margin-bottom: 0.4rem;
-    }
-    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
-    label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
-    input[type=text], input[type=number], select, textarea {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text);
-      font-size: 0.88rem; padding: 0.5rem 0.7rem; outline: none;
-      width: 100%; font-family: inherit;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    input[type=text]:focus, input[type=number]:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
-    }
-    select option { background: var(--surface2); }
-    textarea { resize: vertical; min-height: 75px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+    /* model selector */
+    .model-info{font-size:.72rem;color:var(--muted);margin-top:.3rem;line-height:1.5}
 
-    /* ── Chips ── */
-    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .chip {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 0.28rem 0.7rem;
-      font-size: 0.76rem; cursor: pointer;
-      transition: all 0.15s; user-select: none;
-    }
-    .chip:hover { border-color: var(--accent); color: var(--accent); }
-    .chip.on { background: var(--accent-glow); border-color: var(--accent); color: var(--accent2); }
+    /* button */
+    .btn-gen{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:10px;padding:.8rem;font-size:.95rem;font-weight:700;cursor:pointer;width:100%;transition:opacity .2s,transform .1s,box-shadow .2s;box-shadow:0 4px 20px var(--glow);margin-top:.25rem}
+    .btn-gen:hover{opacity:.9;box-shadow:0 6px 28px rgba(192,132,252,.4)}
+    .btn-gen:active{transform:scale(.98)}
+    .btn-gen:disabled{opacity:.4;cursor:not-allowed}
 
-    /* ── Generate button ── */
-    .btn-gen {
-      background: linear-gradient(135deg, var(--accent), #818cf8);
-      color: #fff; border: none; border-radius: 10px;
-      padding: 0.85rem; font-size: 1rem; font-weight: 700;
-      cursor: pointer; width: 100%;
-      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px var(--accent-glow);
-      margin-top: 0.25rem;
-    }
-    .btn-gen:hover { opacity: 0.9; box-shadow: 0 6px 28px rgba(192,132,252,0.4); }
-    .btn-gen:active { transform: scale(0.98); }
-    .btn-gen:disabled { opacity: 0.45; cursor: not-allowed; }
+    /* output */
+    main{display:flex;flex-direction:column;overflow:hidden}
 
-    /* ── Output ── */
-    .output-panel { display: flex; flex-direction: column; }
-    .out-header {
-      padding: 0.9rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .out-header h2 { font-size: 0.92rem; font-weight: 600; }
-    .out-actions { display: flex; gap: 0.5rem; }
-    .btn-sm {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 7px; color: var(--muted);
-      padding: 0.35rem 0.75rem; font-size: 0.78rem;
-      cursor: pointer; transition: all 0.15s;
-      display: flex; align-items: center; gap: 0.3rem;
-    }
-    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+    /* steps */
+    .steps{display:flex;border-bottom:1px solid var(--border);background:var(--surface)}
+    .step{flex:1;padding:.85rem 1rem;text-align:center;font-size:.8rem;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .step.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .step .num{width:22px;height:22px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.72rem}
+    .step.active .num{background:var(--glow);border-color:var(--accent);color:var(--accent)}
+    .step.done .num{background:#14532d;border-color:var(--success);color:var(--success)}
 
-    .out-body {
-      flex: 1; padding: 2rem;
-      background: var(--bg); overflow-y: auto;
-      min-height: 400px;
-    }
+    .out-body{flex:1;overflow-y:auto;padding:1.75rem;background:var(--bg)}
 
-    /* ── Empty ── */
-    .empty {
-      height: 100%; min-height: 350px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 1rem; color: var(--muted); text-align: center;
-    }
-    .empty .ico { font-size: 3.5rem; opacity: 0.35; }
-    .empty p { font-size: 0.9rem; max-width: 280px; line-height: 1.65; }
+    /* panels */
+    .panel{display:none}.panel.active{display:block}
 
-    /* ── Loader ── */
-    .loader {
-      display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 1.25rem; min-height: 350px; color: var(--muted);
-    }
-    .loader.on { display: flex; }
-    .spinner {
-      width: 48px; height: 48px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* empty */
+    .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;min-height:340px;color:var(--muted);text-align:center}
+    .empty .ico{font-size:3rem;opacity:.35}
+    .empty p{font-size:.88rem;max-width:280px;line-height:1.65}
 
-    /* ── Card ── */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; padding: 2rem;
-      max-width: 820px; margin: 0 auto;
-      line-height: 1.9; font-size: 0.95rem; color: #e4e4e7;
-      white-space: pre-wrap;
-      animation: fadeIn 0.4s ease;
-    }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-    .token-info { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 0.75rem; max-width: 820px; margin-left: auto; margin-right: auto; }
+    /* loader */
+    .loader{display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;min-height:340px;color:var(--muted)}
+    .loader.on{display:flex}
+    .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .loader-msg{font-size:.88rem;text-align:center;line-height:1.7}
+    .progress-bar{width:260px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#818cf8);border-radius:2px;width:0%;transition:width .5s ease}
 
-    /* ── Error ── */
-    .err {
-      background: #1f0808; border: 1px solid #7f1d1d;
-      border-radius: 10px; color: var(--danger);
-      padding: 1rem 1.25rem; font-size: 0.88rem;
-      max-width: 820px; margin: 0 auto;
-    }
+    /* result image */
+    .img-result{max-width:680px;margin:0 auto}
+    .img-result img{width:100%;border-radius:12px;border:1px solid var(--border);display:block;animation:fadeIn .4s ease}
+    .result-actions{display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap}
+    .btn-action{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem 1rem;font-size:.82rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.4rem;text-decoration:none}
+    .btn-action:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-action.primary{background:linear-gradient(135deg,var(--accent),#818cf8);border:none;color:#fff;font-weight:700}
+    .btn-action.primary:hover{opacity:.9;color:#fff}
 
-    /* ── Responsive ── */
-    @media (max-width: 720px) {
-      .container { grid-template-columns: 1fr; }
-      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-      .api-bar { padding: 0.65rem 1rem; }
+    /* result video */
+    .vid-result{max-width:680px;margin:0 auto}
+    .vid-result video{width:100%;border-radius:12px;border:1px solid var(--border);display:block;animation:fadeIn .4s ease}
+
+    /* err */
+    .err{background:#1f0808;border:1px solid #7f1d1d;border-radius:10px;color:var(--danger);padding:.9rem 1.1rem;font-size:.86rem;max-width:680px;margin:0 auto}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:720px){
+      .wrap{grid-template-columns:1fr}
+      aside{border-right:none;border-bottom:1px solid var(--border)}
     }
   </style>
 </head>
@@ -225,182 +117,194 @@
   <div class="logo">✨</div>
   <div>
     <h1>AI Creator</h1>
-    <p>Gerador de Conteúdo Adulto com IA</p>
+    <p>Gera imagem → anima em vídeo · Powered by Replicate</p>
   </div>
   <span class="badge">+18</span>
 </header>
 
-<!-- API Key -->
 <div class="api-bar">
-  <label>🔑 Chave Groq (grátis):</label>
-  <input type="password" id="apiKey" placeholder="gsk_..." oninput="saveKey()" />
-  <small>Crie sua chave grátis em <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> · Salvo só no seu navegador.</small>
+  <label>🔑 Token Replicate:</label>
+  <input type="password" id="apiKey" placeholder="r8_..." oninput="saveKey()" />
+  <small>Pegue em <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com/account/api-tokens</a> · Salvo só no navegador</small>
 </div>
 
-<div class="container">
+<div class="wrap">
 
-  <!-- ── Sidebar ── -->
-  <aside class="sidebar">
+  <!-- sidebar -->
+  <aside>
 
     <div>
-      <div class="section-title">Identidade</div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label>Nome</label>
-          <input type="text" id="nome" placeholder="Ex: Sofia" />
-        </div>
-        <div class="form-group">
-          <label>Idade (18+)</label>
-          <input type="number" id="idade" placeholder="25" min="18" max="65" />
-        </div>
+      <div class="stitle">Identidade</div>
+      <div class="g2">
+        <div class="fg"><label>Nome</label><input type="text" id="nome" placeholder="Ex: Sofia" /></div>
+        <div class="fg"><label>Idade (18+)</label><input type="number" id="idade" placeholder="25" min="18" max="65" /></div>
       </div>
     </div>
 
     <div>
-      <div class="section-title">Aparência Física</div>
-
-      <div class="form-group" style="margin-bottom:.7rem">
-        <label>Etnia / Tom de pele</label>
-        <div class="chips" id="c-etnia">
+      <div class="stitle">Aparência</div>
+      <div class="fg" style="margin-bottom:.65rem">
+        <label>Etnia</label>
+        <div class="chips">
           <span class="chip" data-g="etnia">Brasileira</span>
           <span class="chip" data-g="etnia">Europeia</span>
           <span class="chip" data-g="etnia">Latina</span>
           <span class="chip" data-g="etnia">Asiática</span>
           <span class="chip" data-g="etnia">Negra</span>
           <span class="chip" data-g="etnia">Árabe</span>
-          <span class="chip" data-g="etnia">Indiana</span>
         </div>
       </div>
-
-      <div class="grid-2" style="margin-bottom:.7rem">
-        <div class="form-group">
-          <label>Altura</label>
-          <select id="altura">
-            <option value="">Selecione</option>
-            <option>Baixa (até 1,60m)</option>
-            <option>Média (1,61–1,70m)</option>
-            <option>Alta (1,71–1,80m)</option>
-            <option>Muito alta (+1,80m)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tipo corporal</label>
+      <div class="g2" style="margin-bottom:.65rem">
+        <div class="fg">
+          <label>Corpo</label>
           <select id="corporal">
             <option value="">Selecione</option>
-            <option>Magra / Esguia</option>
-            <option>Atlética / Definida</option>
-            <option>Curvilínea / Voluptuosa</option>
+            <option>Magra</option>
+            <option>Atlética</option>
+            <option>Curvilínea</option>
             <option>Plus size</option>
             <option>Petite</option>
           </select>
         </div>
+        <div class="fg">
+          <label>Seios</label>
+          <select id="seios">
+            <option value="">Selecione</option>
+            <option>Pequenos</option>
+            <option>Médios</option>
+            <option>Grandes</option>
+            <option>Enormes</option>
+          </select>
+        </div>
       </div>
-
-      <div class="form-group" style="margin-bottom:.7rem">
+      <div class="fg" style="margin-bottom:.65rem">
         <label>Cabelo</label>
-        <div class="chips" id="c-cabelo">
+        <div class="chips">
           <span class="chip" data-g="cabelo">Loiro longo</span>
           <span class="chip" data-g="cabelo">Loiro curto</span>
           <span class="chip" data-g="cabelo">Castanho</span>
           <span class="chip" data-g="cabelo">Preto</span>
           <span class="chip" data-g="cabelo">Ruivo</span>
           <span class="chip" data-g="cabelo">Cacheado</span>
-          <span class="chip" data-g="cabelo">Crespo</span>
-          <span class="chip" data-g="cabelo">Colorido</span>
         </div>
       </div>
-
-      <div class="form-group">
+      <div class="fg">
         <label>Olhos</label>
-        <div class="chips" id="c-olhos">
+        <div class="chips">
           <span class="chip" data-g="olhos">Castanhos</span>
           <span class="chip" data-g="olhos">Verdes</span>
           <span class="chip" data-g="olhos">Azuis</span>
-          <span class="chip" data-g="olhos">Mel / Âmbar</span>
+          <span class="chip" data-g="olhos">Mel</span>
           <span class="chip" data-g="olhos">Pretos</span>
-          <span class="chip" data-g="olhos">Cinza</span>
         </div>
       </div>
     </div>
 
     <div>
-      <div class="section-title">Personalidade</div>
-      <div class="chips" id="c-personalidade">
-        <span class="chip" data-g="personalidade">Tímida</span>
-        <span class="chip" data-g="personalidade">Confiante</span>
-        <span class="chip" data-g="personalidade">Dominante</span>
-        <span class="chip" data-g="personalidade">Submissa</span>
-        <span class="chip" data-g="personalidade">Sedutora</span>
-        <span class="chip" data-g="personalidade">Inocente</span>
-        <span class="chip" data-g="personalidade">Safada</span>
-        <span class="chip" data-g="personalidade">Romântica</span>
-        <span class="chip" data-g="personalidade">Intensa</span>
-        <span class="chip" data-g="personalidade">Brincalhona</span>
-      </div>
-    </div>
-
-    <div>
-      <div class="section-title">Cenário</div>
-      <div class="form-group" style="margin-bottom:.7rem">
-        <label>Tipo de cena</label>
-        <select id="tipo-cena">
+      <div class="stitle">Cena</div>
+      <div class="fg" style="margin-bottom:.65rem">
+        <label>Ambiente</label>
+        <select id="ambiente">
           <option value="">Selecione</option>
-          <option>Primeiro encontro</option>
-          <option>Noite de motel</option>
-          <option>Fantasias de escritório</option>
-          <option>Vizinha proibida</option>
-          <option>Férias sensuais</option>
-          <option>Noite de festa</option>
-          <option>Roleplay / Fantasia</option>
+          <option>Quarto sensual</option>
+          <option>Piscina</option>
+          <option>Praia</option>
+          <option>Escritório</option>
+          <option>Banheiro / Ducha</option>
+          <option>Sala de estar</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Descreva o cenário</label>
-        <textarea id="cenario" placeholder="Onde e como a cena acontece..."></textarea>
+      <div class="fg" style="margin-bottom:.65rem">
+        <label>Roupa / Estado</label>
+        <div class="chips">
+          <span class="chip" data-g="roupa">Lingerie</span>
+          <span class="chip" data-g="roupa">Biquíni</span>
+          <span class="chip" data-g="roupa">Vestido curto</span>
+          <span class="chip" data-g="roupa">Topless</span>
+          <span class="chip" data-g="roupa">Nua</span>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Pose / Ação</label>
+        <div class="chips">
+          <span class="chip" data-g="pose">Deitada sedutora</span>
+          <span class="chip" data-g="pose">Em pé sensual</span>
+          <span class="chip" data-g="pose">Olhando câmera</span>
+          <span class="chip" data-g="pose">De costas</span>
+          <span class="chip" data-g="pose">Dançando</span>
+        </div>
       </div>
     </div>
 
     <div>
-      <div class="section-title">Detalhes Extras</div>
-      <div class="form-group">
-        <textarea id="extras" placeholder="Fetiches, roupas, situações especiais..." style="min-height:65px"></textarea>
+      <div class="stitle">Extras</div>
+      <div class="fg">
+        <textarea id="extras" placeholder="Detalhes adicionais, fetiches, acessórios..."></textarea>
       </div>
     </div>
 
-    <button class="btn-gen" id="btn" onclick="generate()">✨ Gerar Conteúdo</button>
+    <div>
+      <div class="stitle">Modelo de IA</div>
+      <div class="fg">
+        <select id="imgModel" onchange="updateModelInfo()">
+          <option value="stability-ai/sdxl">SDXL — Alta qualidade (padrão)</option>
+          <option value="black-forest-labs/flux-dev">FLUX Dev — Ultra realista</option>
+          <option value="black-forest-labs/flux-schnell">FLUX Schnell — Rápido</option>
+        </select>
+        <div class="model-info" id="modelInfo">Gera imagens em alta resolução com ótimo realismo.</div>
+      </div>
+    </div>
+
+    <button class="btn-gen" id="btnGen" onclick="startGenerate()">✨ Gerar Imagem</button>
 
   </aside>
 
-  <!-- ── Output ── -->
-  <main class="output-panel">
-    <div class="out-header">
-      <h2>Conteúdo Gerado</h2>
-      <div class="out-actions">
-        <button class="btn-sm" id="btn-copy" onclick="copyText()" style="display:none">📋 Copiar</button>
-        <button class="btn-sm" id="btn-clear" onclick="clearOut()" style="display:none">🗑 Limpar</button>
-      </div>
+  <!-- output -->
+  <main>
+    <div class="steps">
+      <div class="step active" id="tab1"><span class="num" id="n1">1</span> Gerar Imagem</div>
+      <div class="step" id="tab2"><span class="num" id="n2">2</span> Animar em Vídeo</div>
     </div>
 
     <div class="out-body">
-      <div class="empty" id="empty">
-        <div class="ico">💫</div>
-        <p>Preencha as características ao lado e clique em <strong>Gerar Conteúdo</strong>.</p>
+
+      <!-- PANEL 1: image -->
+      <div class="panel active" id="panel1">
+        <div class="empty" id="emptyImg">
+          <div class="ico">🖼️</div>
+          <p>Configure a personagem ao lado e clique em <strong>Gerar Imagem</strong>.</p>
+        </div>
+        <div class="loader" id="loaderImg">
+          <div class="spinner"></div>
+          <div class="loader-msg" id="loaderImgMsg">Enviando para a IA...<br><small>Costuma levar 20–40 segundos</small></div>
+          <div class="progress-bar"><div class="progress-fill" id="progressImg"></div></div>
+        </div>
+        <div id="resultImg" style="display:none"></div>
       </div>
-      <div class="loader" id="loader">
-        <div class="spinner"></div>
-        <p>Criando sua história...</p>
+
+      <!-- PANEL 2: video -->
+      <div class="panel" id="panel2">
+        <div class="empty" id="emptyVid">
+          <div class="ico">🎬</div>
+          <p>Primeiro gere uma imagem na etapa 1, depois anime ela em vídeo aqui.</p>
+        </div>
+        <div class="loader" id="loaderVid">
+          <div class="spinner"></div>
+          <div class="loader-msg">Animando imagem em vídeo...<br><small>Costuma levar 1–3 minutos</small></div>
+          <div class="progress-bar"><div class="progress-fill" id="progressVid"></div></div>
+        </div>
+        <div id="resultVid" style="display:none"></div>
       </div>
-      <div id="result"></div>
+
     </div>
   </main>
-
 </div>
 
 <script>
-  // ── Persist API key ──
-  const keyInput = document.getElementById('apiKey');
-  keyInput.value = localStorage.getItem('anth_key') || '';
-  function saveKey() { localStorage.setItem('anth_key', keyInput.value.trim()); }
+  // ── API Key ──
+  const $apiKey = document.getElementById('apiKey');
+  $apiKey.value = localStorage.getItem('rep_key') || '';
+  function saveKey(){ localStorage.setItem('rep_key', $apiKey.value.trim()) }
 
   // ── Chips ──
   document.querySelectorAll('.chip').forEach(c => {
@@ -412,92 +316,170 @@
   });
   const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
 
-  // ── Generate ──
-  async function generate() {
-    const key = keyInput.value.trim();
-    if (!key) { alert('Cole sua chave da API Anthropic no campo acima.'); return; }
+  // ── Model info ──
+  const modelDescs = {
+    'stability-ai/sdxl': 'Gera imagens em alta resolução com ótimo realismo.',
+    'black-forest-labs/flux-dev': 'Ultra realista, detalhes incríveis. Recomendado para rostos.',
+    'black-forest-labs/flux-schnell': 'Versão rápida do FLUX, bom custo-benefício.',
+  };
+  function updateModelInfo(){
+    const v = document.getElementById('imgModel').value;
+    document.getElementById('modelInfo').textContent = modelDescs[v] || '';
+  }
 
-    const btn = document.getElementById('btn');
-    const empty = document.getElementById('empty');
-    const loader = document.getElementById('loader');
-    const result = document.getElementById('result');
+  // ── Tabs ──
+  function showTab(n){
+    document.getElementById('panel1').classList.toggle('active', n===1);
+    document.getElementById('panel2').classList.toggle('active', n===2);
+    document.getElementById('tab1').classList.toggle('active', n===1);
+    document.getElementById('tab2').classList.toggle('active', n===2);
+  }
+  document.getElementById('tab1').onclick = () => showTab(1);
+  document.getElementById('tab2').onclick = () => showTab(2);
 
+  // ── Build prompt ──
+  function buildPrompt(){
+    const parts = [
+      'photorealistic portrait, beautiful woman, 8k, highly detailed, professional photography, cinematic lighting',
+      chip('etnia') && `${chip('etnia')} woman`,
+      document.getElementById('corporal').value && `${document.getElementById('corporal').value} body`,
+      document.getElementById('seios').value && `${document.getElementById('seios').value} breasts`,
+      chip('cabelo') && `${chip('cabelo')} hair`,
+      chip('olhos') && `${chip('olhos')} eyes`,
+      chip('roupa') && chip('roupa'),
+      chip('pose') && chip('pose'),
+      document.getElementById('ambiente').value && `in a ${document.getElementById('ambiente').value}`,
+      document.getElementById('extras').value,
+    ].filter(Boolean);
+    return parts.join(', ');
+  }
+
+  const neg = 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, logo, extra limbs, disfigured, cartoon, anime';
+
+  // ── Replicate polling ──
+  async function createPrediction(model, input, key){
+    const r = await fetch(`https://api.replicate.com/v1/models/${model}/predictions`, {
+      method:'POST',
+      headers:{ 'Authorization':`Bearer ${key}`, 'Content-Type':'application/json' },
+      body: JSON.stringify({ input }),
+    });
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.detail || JSON.stringify(d));
+    return d;
+  }
+
+  async function pollPrediction(id, key, progressEl, timeoutMs=180000){
+    const start = Date.now();
+    let pct = 5;
+    while(Date.now()-start < timeoutMs){
+      await sleep(3000);
+      const r = await fetch(`https://api.replicate.com/v1/predictions/${id}`, {
+        headers:{ 'Authorization':`Bearer ${key}` }
+      });
+      const d = await r.json();
+      if(d.status === 'succeeded') return d.output;
+      if(d.status === 'failed') throw new Error(d.error || 'Falhou');
+      pct = Math.min(pct + 8, 90);
+      if(progressEl) progressEl.style.width = pct+'%';
+    }
+    throw new Error('Tempo esgotado (3 min)');
+  }
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  // ── Step 1: Generate Image ──
+  let generatedImageUrl = null;
+
+  async function startGenerate(){
+    const key = $apiKey.value.trim();
+    if(!key){ alert('Cole seu token do Replicate no campo acima.'); return; }
+
+    const btn = document.getElementById('btnGen');
     btn.disabled = true;
-    empty.style.display = 'none';
-    result.innerHTML = '';
-    loader.classList.add('on');
-    document.getElementById('btn-copy').style.display = 'none';
-    document.getElementById('btn-clear').style.display = 'none';
-
-    const cenario = document.getElementById('cenario').value || document.getElementById('tipo-cena').value;
-
-    const userMsg = `Você é um escritor especializado em conteúdo adulto (+18) criativo e sensual. Crie uma narrativa detalhada e envolvente com as seguintes características:
-
-Personagem:
-- Nome: ${document.getElementById('nome').value || 'não definido'}
-- Idade: ${document.getElementById('idade').value || 'adulta'} anos
-- Etnia: ${chip('etnia') || 'não especificada'}
-- Altura: ${document.getElementById('altura').value || 'não especificada'}
-- Corpo: ${document.getElementById('corporal').value || 'não especificado'}
-- Cabelo: ${chip('cabelo') || 'não especificado'}
-- Olhos: ${chip('olhos') || 'não especificados'}
-- Personalidade: ${chip('personalidade') || 'não especificada'}
-
-Cenário: ${cenario || 'livre'}
-Extras: ${document.getElementById('extras').value || 'nenhum'}
-
-Escreva uma narrativa adulta (+18), sensual, detalhada e explícita com pelo menos 400 palavras. Seja literário, criativo e apaixonante.`;
+    showTab(1);
+    document.getElementById('emptyImg').style.display = 'none';
+    document.getElementById('resultImg').style.display = 'none';
+    document.getElementById('loaderImg').classList.add('on');
+    document.getElementById('progressImg').style.width = '5%';
+    document.getElementById('loaderImgMsg').innerHTML = 'Enviando para a IA...<br><small>Costuma levar 20–40 segundos</small>';
 
     try {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${key}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages: [{ role: 'user', content: userMsg }],
-          max_tokens: 2048,
-          temperature: 0.9,
-        }),
-      });
+      const model = document.getElementById('imgModel').value;
+      const prompt = buildPrompt();
 
-      const data = await res.json();
+      let input = { prompt, negative_prompt: neg, width: 768, height: 1024, num_outputs: 1 };
+      if(model.includes('flux')) input = { prompt, aspect_ratio:'3:4', output_format:'webp', output_quality:90 };
 
-      if (!res.ok || data.error) {
-        result.innerHTML = `<div class="err">⚠️ ${data.error?.message || JSON.stringify(data)}</div>`;
-      } else {
-        const text = data.choices[0].message.content;
-        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Llama 3.3 70B via Groq ✦ ${text.length} caracteres</p>`;
-        document.getElementById('btn-copy').style.display = 'flex';
-        document.getElementById('btn-clear').style.display = 'flex';
-      }
-    } catch (e) {
-      result.innerHTML = `<div class="err">⚠️ Erro: ${e.message}</div>`;
+      document.getElementById('loaderImgMsg').innerHTML = 'Gerando imagem...<br><small>Aguarde ~30 segundos</small>';
+      const pred = await createPrediction(model, input, key);
+      const output = await pollPrediction(pred.id, key, document.getElementById('progressImg'));
+
+      generatedImageUrl = Array.isArray(output) ? output[0] : output;
+      document.getElementById('progressImg').style.width = '100%';
+
+      document.getElementById('resultImg').innerHTML = `
+        <div class="img-result">
+          <img src="${generatedImageUrl}" alt="Imagem gerada" crossorigin="anonymous" />
+          <div class="result-actions">
+            <a class="btn-action" href="${generatedImageUrl}" download target="_blank">⬇️ Baixar imagem</a>
+            <button class="btn-action primary" onclick="startAnimate()">🎬 Animar em vídeo →</button>
+          </div>
+        </div>`;
+
+      document.getElementById('resultImg').style.display = 'block';
+      document.getElementById('n1').textContent = '✓';
+      document.getElementById('tab1').classList.add('done');
+
+    } catch(e) {
+      document.getElementById('resultImg').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
+      document.getElementById('resultImg').style.display = 'block';
     } finally {
-      loader.classList.remove('on');
+      document.getElementById('loaderImg').classList.remove('on');
       btn.disabled = false;
     }
   }
 
-  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // ── Step 2: Animate to Video ──
+  async function startAnimate(){
+    const key = $apiKey.value.trim();
+    if(!key){ alert('Cole seu token do Replicate no campo acima.'); return; }
+    if(!generatedImageUrl){ alert('Primeiro gere uma imagem na etapa 1.'); return; }
 
+    showTab(2);
+    document.getElementById('emptyVid').style.display = 'none';
+    document.getElementById('resultVid').style.display = 'none';
+    document.getElementById('loaderVid').classList.add('on');
+    document.getElementById('progressVid').style.width = '5%';
 
-  async function copyText() {
-    const t = document.querySelector('.card')?.textContent;
-    if (!t) return;
-    await navigator.clipboard.writeText(t);
-    const b = document.getElementById('btn-copy');
-    b.textContent = '✅ Copiado!';
-    setTimeout(() => b.innerHTML = '📋 Copiar', 2000);
-  }
+    try {
+      const pred = await createPrediction(
+        'stability-ai/stable-video-diffusion',
+        { input_image: generatedImageUrl, sizing_strategy:'maintain_aspect_ratio', motion_bucket_id:127, fps:8 },
+        key
+      );
+      const output = await pollPrediction(pred.id, key, document.getElementById('progressVid'), 300000);
+      const videoUrl = Array.isArray(output) ? output[0] : output;
+      document.getElementById('progressVid').style.width = '100%';
 
-  function clearOut() {
-    document.getElementById('result').innerHTML = '';
-    document.getElementById('empty').style.display = 'flex';
-    document.getElementById('btn-copy').style.display = 'none';
-    document.getElementById('btn-clear').style.display = 'none';
+      document.getElementById('resultVid').innerHTML = `
+        <div class="vid-result">
+          <video src="${videoUrl}" controls autoplay loop muted playsinline></video>
+          <div class="result-actions" style="margin-top:.9rem">
+            <a class="btn-action" href="${videoUrl}" download target="_blank">⬇️ Baixar vídeo</a>
+            <button class="btn-action" onclick="showTab(1)">← Voltar à imagem</button>
+          </div>
+        </div>`;
+
+      document.getElementById('resultVid').style.display = 'block';
+      document.getElementById('n2').textContent = '✓';
+      document.getElementById('tab2').classList.add('done');
+
+    } catch(e) {
+      document.getElementById('resultVid').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
+      document.getElementById('resultVid').style.display = 'block';
+    } finally {
+      document.getElementById('loaderVid').classList.remove('on');
+    }
   }
 </script>
 </body>
