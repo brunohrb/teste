@@ -294,46 +294,64 @@
     document.getElementById('loaderMsg').innerHTML =
       `Gerando ${qtd} imagem${qtd>1?'s':''}...<br><small>Aguarde ~${qtd*8} segundos</small>`;
 
-    try {
-      const urls = lastSeeds.map(s => makeImageUrl(prompt, s));
+    const urls = lastSeeds.map(s => makeImageUrl(prompt, s));
 
-      // Carrega todas as imagens em paralelo
-      await Promise.all(urls.map(url => new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = url;
-      })));
+    // Monta o grid imediatamente — imagens carregam sozinhas
+    const grid = document.getElementById('imgGrid');
+    grid.innerHTML = '';
+    let carregadas = 0;
 
-      // Monta o grid
-      const grid = document.getElementById('imgGrid');
-      grid.innerHTML = '';
-      urls.forEach((url, i) => {
-        const card = document.createElement('div');
-        card.className = 'img-card';
+    urls.forEach((url, i) => {
+      const card = document.createElement('div');
+      card.className = 'img-card';
+      card.style.minHeight = '300px';
+      card.style.background = 'var(--surface2)';
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--muted);font-size:.8rem;flex-direction:column;gap:.5rem">
+          <div class="spinner" style="width:32px;height:32px;border-width:2px"></div>
+          Gerando...
+        </div>`;
+      grid.appendChild(card);
+
+      const img = new Image();
+      img.onload = () => {
+        card.style.minHeight = '';
         card.innerHTML = `
-          <img src="${url}" alt="Imagem ${i+1}" loading="lazy" />
+          <img src="${url}" alt="Imagem ${i+1}" />
           <div class="overlay">
             <a href="${url}" download="ai-creator-${i+1}.jpg" target="_blank" style="color:#fff;text-decoration:none">⬇️ Baixar</a>
           </div>`;
-        grid.appendChild(card);
-      });
+        carregadas++;
+        if(carregadas === 1){
+          document.getElementById('loader').classList.remove('on');
+          btn.disabled = false;
+          document.getElementById('results').classList.add('show');
+          document.getElementById('actionsRow').innerHTML = `
+            <button class="btn-a primary" onclick="gerar()">🔄 Gerar novas</button>
+            <button class="btn-a" onclick="regenerar()">✨ Variações</button>`;
+          document.getElementById('promptUsed').textContent = '📝 Prompt: ' + prompt;
+        }
+      };
+      img.onerror = () => {
+        card.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--danger);font-size:.8rem;flex-direction:column;gap:.4rem">⚠️<span>Falhou — tente novamente</span></div>`;
+        carregadas++;
+        if(carregadas === urls.length && carregadas === 0){
+          document.getElementById('loader').classList.remove('on');
+          btn.disabled = false;
+        }
+      };
+      img.src = url;
+    });
 
-      document.getElementById('actionsRow').innerHTML = `
-        <button class="btn-a primary" onclick="gerar()">🔄 Gerar novas</button>
-        <button class="btn-a" onclick="regenerar()">✨ Mesma personagem, imagens diferentes</button>`;
-
-      document.getElementById('promptUsed').textContent = '📝 Prompt: ' + prompt;
-
-      document.getElementById('results').classList.add('show');
-
-    } catch(e) {
-      document.getElementById('empty').style.display = 'flex';
-      document.getElementById('empty').innerHTML = `<div class="ico">⚠️</div><p style="color:var(--danger)">Erro ao gerar: ${e.message}<br><br><button onclick="gerar()" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem 1rem;cursor:pointer">Tentar novamente</button></p>`;
-    } finally {
+    // Timeout de segurança: 90s
+    setTimeout(() => {
       document.getElementById('loader').classList.remove('on');
       btn.disabled = false;
-    }
+      if(!document.getElementById('results').classList.contains('show')){
+        document.getElementById('results').classList.add('show');
+        document.getElementById('actionsRow').innerHTML = `<button class="btn-a primary" onclick="gerar()">🔄 Tentar novamente</button>`;
+      }
+    }, 90000);
   }
 
   // Gera novas variações da mesma personagem (mesmo prompt, seeds diferentes)
