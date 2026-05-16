@@ -8,50 +8,31 @@ export default async function handler(req, res) {
   const token = process.env.REPLICATE_API_TOKEN;
   if (!token) return res.status(500).json({ error: 'REPLICATE_API_TOKEN não configurado no Vercel.' });
 
-  const { prompt, model = 'flux-schnell' } = req.body;
+  const { prompt } = req.body;
   if (!prompt) return res.status(400).json({ error: 'Prompt vazio.' });
 
-  // Usa versão específica do SDXL sem safety checker
   const VERSION = 'da77bc59ee60423279fd632efb4795ab731d9e3ca9078d39d751131ca6a99f00';
 
-  try {
-    const create = await fetch('https://api.replicate.com/v1/predictions', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        version: VERSION,
-        input: {
-          prompt: prompt + ', nude, nsfw, photorealistic, 8k',
-          negative_prompt: 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, cartoon, clothed',
-          width: 768,
-          height: 1024,
-          num_outputs: 1,
-          guidance_scale: 7.5,
-          num_inference_steps: 30,
-          disable_safety_checker: true,
-        },
-      }),
-    });
+  const create = await fetch('https://api.replicate.com/v1/predictions', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      version: VERSION,
+      input: {
+        prompt: prompt + ', nude, nsfw, photorealistic, 8k',
+        negative_prompt: 'deformed, ugly, bad anatomy, blurry, low quality, watermark, text, cartoon, clothed',
+        width: 768,
+        height: 1024,
+        num_outputs: 1,
+        guidance_scale: 7.5,
+        num_inference_steps: 30,
+        disable_safety_checker: true,
+      },
+    }),
+  });
 
-    const prediction = await create.json();
-    if (!create.ok) return res.status(500).json({ error: prediction.detail || JSON.stringify(prediction) });
+  const prediction = await create.json();
+  if (!create.ok) return res.status(500).json({ error: prediction.detail || JSON.stringify(prediction) });
 
-    // Poll até terminar (máx 120s)
-    let result = prediction;
-    for (let i = 0; i < 40; i++) {
-      if (result.status === 'succeeded') break;
-      if (result.status === 'failed') return res.status(500).json({ error: result.error || 'Falhou' });
-      await new Promise(r => setTimeout(r, 3000));
-      const poll = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      result = await poll.json();
-    }
-
-    const output = Array.isArray(result.output) ? result.output : [result.output];
-    return res.status(200).json({ images: output });
-
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
-  }
+  return res.status(200).json({ id: prediction.id });
 }

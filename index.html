@@ -244,15 +244,22 @@
 
   let lastImageUrl = null;
 
+  async function waitPrediction(id, progressCb){
+    for(let i = 0; i < 120; i++){
+      await new Promise(r => setTimeout(r, 4000));
+      const r = await fetch(`/api/poll?id=${id}`);
+      const st = await r.json();
+      if(progressCb) progressCb(Math.min(10 + i * 4, 90));
+      if(st.status === 'succeeded') return st.output;
+      if(st.status === 'failed') throw new Error(st.error || 'Geração falhou');
+    }
+    throw new Error('Tempo esgotado');
+  }
+
   async function gerarImagem(){
     setUI(true);
     document.getElementById('lmsg').innerHTML = '🖼️ Gerando imagem...<br><small>SDXL · ~30–60 segundos</small>';
     const prompt = buildPrompt();
-    let pct = 10;
-    const progTimer = setInterval(() => {
-      pct = Math.min(pct + 4, 88);
-      document.getElementById('progFill').style.width = pct + '%';
-    }, 2000);
     try {
       const res = await fetch('/api/generate', {
         method: 'POST',
@@ -262,7 +269,11 @@
       const data = await res.json();
       if(!res.ok) throw new Error(data.error || 'Erro desconhecido');
 
-      const urls = Array.isArray(data.images) ? data.images : [data.images];
+      const output = await waitPrediction(data.id, p => {
+        document.getElementById('progFill').style.width = p + '%';
+      });
+
+      const urls = Array.isArray(output) ? output : [output];
       lastImageUrl = urls[0];
 
       const cards = urls.map((url, i) => `
@@ -282,7 +293,7 @@
         </div>`, prompt);
     } catch(e){
       document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
-    } finally { clearInterval(progTimer); setUI(false); }
+    } finally { setUI(false); }
   }
 
   async function gerarVideo(){
@@ -294,11 +305,6 @@
     if(!lastImageUrl) return;
     setUI(true);
     document.getElementById('lmsg').innerHTML = '🎬 Animando imagem em vídeo...<br><small>Stable Video Diffusion · ~2 minutos</small>';
-    let pct = 10;
-    const progTimer = setInterval(() => {
-      pct = Math.min(pct + 2, 88);
-      document.getElementById('progFill').style.width = pct + '%';
-    }, 3000);
     try {
       const res = await fetch('/api/video', {
         method: 'POST',
@@ -308,7 +314,11 @@
       const data = await res.json();
       if(!res.ok) throw new Error(data.error || 'Erro desconhecido');
 
-      const url = data.video;
+      const output = await waitPrediction(data.id, p => {
+        document.getElementById('progFill').style.width = p + '%';
+      });
+
+      const url = Array.isArray(output) ? output[0] : output;
       showResult(`
         <div class="media-card">
           <video src="${url}" controls autoplay loop muted playsinline></video>
@@ -323,7 +333,7 @@
         </div>`, 'Vídeo gerado a partir da imagem anterior');
     } catch(e){
       document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
-    } finally { clearInterval(progTimer); setUI(false); }
+    } finally { setUI(false); }
   }
 </script>
 </body>
