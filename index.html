@@ -367,8 +367,9 @@
         input_image: lastImageUrl,
         sizing_strategy: 'maintain_aspect_ratio',
         motion_bucket_id: 127,
-        fps: 8,
+        fps_id: 8,
         cond_aug: 0.02,
+        video_length: '25_frames_with_svd_xt',
       }, p => document.getElementById('progFill').style.width = p+'%');
 
       const url = Array.isArray(output) ? output[0] : output;
