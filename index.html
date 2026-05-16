@@ -12,15 +12,22 @@
       --text:#f4f4f5;--muted:#71717a;--danger:#f87171;--success:#34d399;
     }
     body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
-
     header{background:linear-gradient(135deg,#1a0d2e,#0d0d0f 70%);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:.9rem}
     .logo{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),#818cf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 18px var(--glow)}
     header h1{font-size:1.3rem;font-weight:700;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     header p{font-size:.73rem;color:var(--muted);margin-top:2px}
-    .badge{margin-left:auto;background:#7f1d1d;color:#fca5a5;font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:6px;letter-spacing:.05em}
+    .badge{margin-left:auto;background:#7f1d1d;color:#fca5a5;font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:6px}
+
+    .api-bar{background:#111114;border-bottom:1px solid var(--border);padding:.65rem 1.5rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+    .api-bar label{font-size:.78rem;color:var(--muted);white-space:nowrap}
+    .api-bar input{flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;padding:.42rem .7rem;outline:none;font-family:monospace;transition:border-color .2s}
+    .api-bar input:focus{border-color:var(--accent)}
+    .btn-sm{background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--muted);padding:.38rem .8rem;font-size:.78rem;cursor:pointer;white-space:nowrap;transition:all .15s}
+    .btn-sm:hover{border-color:var(--accent);color:var(--accent)}
+    #keyStatus{font-size:.78rem}
+    .api-bar a{color:var(--accent);text-decoration:none;font-size:.72rem}
 
     .wrap{display:grid;grid-template-columns:370px 1fr;flex:1}
-
     aside{background:var(--surface);border-right:1px solid var(--border);padding:1.25rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.1rem}
     .stitle{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.35rem}
     .fg{display:flex;flex-direction:column;gap:.28rem}
@@ -28,22 +35,21 @@
     input[type=text],input[type=number],select,textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.87rem;padding:.48rem .68rem;outline:none;width:100%;font-family:inherit;transition:border-color .2s,box-shadow .2s}
     input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
     select option{background:var(--surface2)}
-    textarea{resize:vertical;min-height:70px}
+    textarea{resize:vertical;min-height:68px}
     .g2{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
-
     .chips{display:flex;flex-wrap:wrap;gap:.38rem}
     .chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:.26rem .68rem;font-size:.75rem;cursor:pointer;transition:all .15s;user-select:none}
     .chip:hover{border-color:var(--accent);color:var(--accent)}
     .chip.on{background:var(--glow);border-color:var(--accent);color:var(--accent2)}
 
     .btns{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.25rem}
-    .btn-gen{background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;border:none;border-radius:10px;padding:.75rem;font-size:.88rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;box-shadow:0 4px 20px var(--glow);display:flex;align-items:center;justify-content:center;gap:.4rem}
-    .btn-gen:hover{opacity:.9}.btn-gen:active{transform:scale(.98)}.btn-gen:disabled{opacity:.4;cursor:not-allowed}
-    .btn-gen.vid{background:linear-gradient(135deg,#f0abfc,#818cf8)}
+    .btn-gen{color:#fff;border:none;border-radius:10px;padding:.78rem;font-size:.9rem;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:.4rem}
+    .btn-gen.img{background:linear-gradient(135deg,var(--accent),#818cf8);box-shadow:0 4px 20px var(--glow)}
+    .btn-gen.vid{background:linear-gradient(135deg,#f472b6,#818cf8)}
+    .btn-gen:hover{opacity:.88}.btn-gen:active{transform:scale(.97)}.btn-gen:disabled{opacity:.4;cursor:not-allowed}
 
-    main{display:flex;flex-direction:column;overflow:hidden}
+    main{display:flex;flex-direction:column}
     .out-body{flex:1;overflow-y:auto;padding:1.75rem;background:var(--bg);min-height:400px}
-
     .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;min-height:340px;color:var(--muted);text-align:center}
     .empty .ico{font-size:3rem;opacity:.35}
     .empty p{font-size:.88rem;max-width:320px;line-height:1.7}
@@ -52,23 +58,24 @@
     .loader.on{display:flex}
     .spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .loader-msg{font-size:.88rem;line-height:1.9}
+    .lmsg{font-size:.9rem;line-height:1.9}
+    .prog{width:260px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:.25rem}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#818cf8);border-radius:2px;width:5%;transition:width .8s ease}
 
-    .results{display:none;max-width:720px;margin:0 auto}
-    .results.show{display:block;animation:fadeIn .4s ease}
-    .img-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--surface2);margin-bottom:1rem}
-    .img-card img,.img-card video{width:100%;display:block}
-    .img-card .overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;display:flex;align-items:center;justify-content:center;transition:opacity .2s;gap:.75rem}
-    .img-card:hover .overlay{opacity:1}
-    .ovr-btn{color:#fff;background:rgba(0,0,0,.6);padding:.4rem .8rem;border-radius:8px;text-decoration:none;font-size:.82rem;border:none;cursor:pointer}
+    .result-wrap{max-width:720px;margin:0 auto;animation:fadeIn .4s ease}
+    .media-card{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--surface2);margin-bottom:1rem;position:relative}
+    .media-card img,.media-card video{width:100%;display:block}
+    .media-card .ov{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;display:flex;align-items:center;justify-content:center;gap:.75rem;transition:opacity .2s}
+    .media-card:hover .ov{opacity:1}
+    .ovb{color:#fff;background:rgba(0,0,0,.65);padding:.4rem .85rem;border-radius:8px;text-decoration:none;font-size:.82rem;border:none;cursor:pointer}
 
-    .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
-    .btn-a{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem 1rem;font-size:.82rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.4rem;text-decoration:none}
+    .acts{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.9rem}
+    .btn-a{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.48rem .9rem;font-size:.82rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.4rem;text-decoration:none}
     .btn-a:hover{border-color:var(--accent);color:var(--accent)}
-    .btn-a.primary{background:linear-gradient(135deg,var(--accent),#818cf8);border:none;color:#fff;font-weight:700}
-    .btn-a.primary:hover{opacity:.9;color:#fff}
+    .btn-a.p{background:linear-gradient(135deg,var(--accent),#818cf8);border:none;color:#fff;font-weight:700}
+    .btn-a.p:hover{opacity:.9;color:#fff}
 
-    .prompt-used{font-size:.72rem;color:var(--muted);padding:.75rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);line-height:1.6;word-break:break-word}
+    .ptag{font-size:.71rem;color:var(--muted);padding:.65rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);line-height:1.6;word-break:break-word}
     .err{background:#1f0808;border:1px solid #7f1d1d;border-radius:10px;color:var(--danger);padding:1rem 1.25rem;font-size:.86rem;line-height:1.7}
 
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -79,16 +86,20 @@
 
 <header>
   <div class="logo">✨</div>
-  <div>
-    <h1>AI Creator</h1>
-    <p>Imagens e vídeos com IA · Replicate · Vercel</p>
-  </div>
+  <div><h1>AI Creator</h1><p>Imagens e vídeos com IA · Replicate · +18</p></div>
   <span class="badge">+18</span>
 </header>
 
+<div class="api-bar">
+  <label>🔑 Token Replicate:</label>
+  <input type="password" id="apiKey" placeholder="r8_..." oninput="saveKey()" />
+  <button class="btn-sm" onclick="testar()">Testar</button>
+  <span id="keyStatus"></span>
+  <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com/account/api-tokens</a>
+</div>
+
 <div class="wrap">
   <aside>
-
     <div>
       <div class="stitle">Identidade</div>
       <div class="g2">
@@ -96,10 +107,9 @@
         <div class="fg"><label>Idade (18+)</label><input type="number" id="idade" placeholder="25" min="18" max="65" /></div>
       </div>
     </div>
-
     <div>
       <div class="stitle">Aparência</div>
-      <div class="fg" style="margin-bottom:.65rem">
+      <div class="fg" style="margin-bottom:.6rem">
         <label>Etnia</label>
         <div class="chips">
           <span class="chip" data-g="etnia">Brasileira</span>
@@ -110,118 +120,95 @@
           <span class="chip" data-g="etnia">Árabe</span>
         </div>
       </div>
-      <div class="g2" style="margin-bottom:.65rem">
-        <div class="fg">
-          <label>Corpo</label>
+      <div class="g2" style="margin-bottom:.6rem">
+        <div class="fg"><label>Corpo</label>
           <select id="corporal">
             <option value="">Selecione</option>
-            <option>Magra</option><option>Atlética</option>
-            <option>Curvilínea</option><option>Plus size</option><option>Petite</option>
+            <option>Magra</option><option>Atlética</option><option>Curvilínea</option><option>Plus size</option><option>Petite</option>
           </select>
         </div>
-        <div class="fg">
-          <label>Seios</label>
+        <div class="fg"><label>Seios</label>
           <select id="seios">
             <option value="">Selecione</option>
-            <option>Pequenos</option><option>Médios</option>
-            <option>Grandes</option><option>Enormes</option>
+            <option>Pequenos</option><option>Médios</option><option>Grandes</option><option>Enormes</option>
           </select>
         </div>
       </div>
-      <div class="fg" style="margin-bottom:.65rem">
+      <div class="fg" style="margin-bottom:.6rem">
         <label>Cabelo</label>
         <div class="chips">
-          <span class="chip" data-g="cabelo">Loiro longo</span>
-          <span class="chip" data-g="cabelo">Loiro curto</span>
-          <span class="chip" data-g="cabelo">Castanho</span>
-          <span class="chip" data-g="cabelo">Preto</span>
-          <span class="chip" data-g="cabelo">Ruivo</span>
-          <span class="chip" data-g="cabelo">Cacheado</span>
+          <span class="chip" data-g="cabelo">Loiro longo</span><span class="chip" data-g="cabelo">Loiro curto</span>
+          <span class="chip" data-g="cabelo">Castanho</span><span class="chip" data-g="cabelo">Preto</span>
+          <span class="chip" data-g="cabelo">Ruivo</span><span class="chip" data-g="cabelo">Cacheado</span>
         </div>
       </div>
       <div class="fg">
         <label>Olhos</label>
         <div class="chips">
-          <span class="chip" data-g="olhos">Castanhos</span>
-          <span class="chip" data-g="olhos">Verdes</span>
-          <span class="chip" data-g="olhos">Azuis</span>
-          <span class="chip" data-g="olhos">Mel</span>
-          <span class="chip" data-g="olhos">Pretos</span>
+          <span class="chip" data-g="olhos">Castanhos</span><span class="chip" data-g="olhos">Verdes</span>
+          <span class="chip" data-g="olhos">Azuis</span><span class="chip" data-g="olhos">Mel</span><span class="chip" data-g="olhos">Pretos</span>
         </div>
       </div>
     </div>
-
     <div>
       <div class="stitle">Cena</div>
-      <div class="fg" style="margin-bottom:.65rem">
+      <div class="fg" style="margin-bottom:.6rem">
         <label>Ambiente</label>
         <select id="ambiente">
           <option value="">Selecione</option>
-          <option>Quarto sensual</option><option>Piscina</option>
-          <option>Praia</option><option>Escritório</option>
-          <option>Banheiro / Ducha</option><option>Sala de estar</option>
+          <option>Quarto sensual</option><option>Piscina</option><option>Praia</option>
+          <option>Escritório</option><option>Banheiro / Ducha</option><option>Sala de estar</option>
         </select>
       </div>
-      <div class="fg" style="margin-bottom:.65rem">
+      <div class="fg" style="margin-bottom:.6rem">
         <label>Roupa</label>
         <div class="chips">
-          <span class="chip" data-g="roupa">Lingerie</span>
-          <span class="chip" data-g="roupa">Biquíni</span>
-          <span class="chip" data-g="roupa">Vestido curto</span>
-          <span class="chip" data-g="roupa">Topless</span>
+          <span class="chip" data-g="roupa">Lingerie</span><span class="chip" data-g="roupa">Biquíni</span>
+          <span class="chip" data-g="roupa">Vestido curto</span><span class="chip" data-g="roupa">Topless</span>
           <span class="chip" data-g="roupa">Nua</span>
         </div>
       </div>
       <div class="fg">
         <label>Pose / Ação</label>
         <div class="chips">
-          <span class="chip" data-g="pose">Deitada sedutora</span>
-          <span class="chip" data-g="pose">Em pé sensual</span>
-          <span class="chip" data-g="pose">Olhando câmera</span>
-          <span class="chip" data-g="pose">De costas</span>
-          <span class="chip" data-g="pose">Dançando</span>
-          <span class="chip" data-g="pose">Se tocando</span>
+          <span class="chip" data-g="pose">Deitada sedutora</span><span class="chip" data-g="pose">Em pé sensual</span>
+          <span class="chip" data-g="pose">Olhando câmera</span><span class="chip" data-g="pose">De costas</span>
+          <span class="chip" data-g="pose">Dançando</span><span class="chip" data-g="pose">Se tocando</span>
         </div>
       </div>
     </div>
-
     <div>
       <div class="stitle">Extras</div>
-      <div class="fg"><textarea id="extras" placeholder="Detalhes adicionais, fetiches, acessórios..."></textarea></div>
+      <div class="fg"><textarea id="extras" placeholder="Fetiches, acessórios, detalhes..."></textarea></div>
     </div>
-
     <div class="btns">
-      <button class="btn-gen" id="btnImg" onclick="gerarImagem()">🖼️ Imagem</button>
+      <button class="btn-gen img" id="btnImg" onclick="gerarImagem()">🖼️ Imagem</button>
       <button class="btn-gen vid" id="btnVid" onclick="gerarVideo()">🎬 Vídeo</button>
     </div>
-
   </aside>
 
   <main>
     <div class="out-body">
-
       <div class="empty" id="empty">
         <div class="ico">✨</div>
-        <p>Configure a personagem ao lado e clique em<br>
-        <strong>🖼️ Imagem</strong> ou <strong>🎬 Vídeo</strong> para gerar.</p>
+        <p>Configure a personagem e clique em<br><strong>🖼️ Imagem</strong> ou <strong>🎬 Vídeo</strong></p>
       </div>
-
       <div class="loader" id="loader">
         <div class="spinner"></div>
-        <div class="loader-msg" id="loaderMsg">Gerando...</div>
+        <div class="lmsg" id="lmsg">Aguarde...</div>
+        <div class="prog"><div class="prog-fill" id="progFill"></div></div>
       </div>
-
-      <div class="results" id="results">
-        <div id="mediaContainer"></div>
-        <div class="actions" id="actionsRow"></div>
-        <div class="prompt-used" id="promptUsed"></div>
-      </div>
-
+      <div id="output"></div>
     </div>
   </main>
 </div>
 
 <script>
+  const PROXY = 'https://corsproxy.io/?';
+  const $key = document.getElementById('apiKey');
+  $key.value = localStorage.getItem('rep_key') || '';
+  function saveKey(){ localStorage.setItem('rep_key', $key.value.trim()) }
+
   document.querySelectorAll('.chip').forEach(c => {
     c.addEventListener('click', () => {
       const g = c.dataset.g;
@@ -230,10 +217,26 @@
     });
   });
   const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  async function testar(){
+    const key = $key.value.trim();
+    const el = document.getElementById('keyStatus');
+    if(!key){ el.innerHTML = '<span style="color:var(--danger)">Cole o token primeiro</span>'; return; }
+    el.innerHTML = '<span style="color:var(--muted)">Testando...</span>';
+    try {
+      const r = await fetch(PROXY + encodeURIComponent('https://api.replicate.com/v1/account'), {
+        headers: { 'Authorization': `Bearer ${key}` }
+      });
+      const d = await r.json();
+      if(d.username) el.innerHTML = `<span style="color:var(--success)">✅ ${d.username}</span>`;
+      else el.innerHTML = `<span style="color:var(--danger)">❌ Token inválido</span>`;
+    } catch(e){ el.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`; }
+  }
 
   function buildPrompt(){
     return [
-      'photorealistic, beautiful woman',
+      'photorealistic beautiful woman',
       chip('etnia') && chip('etnia')+' woman',
       document.getElementById('corporal').value,
       document.getElementById('seios').value && document.getElementById('seios').value+' breasts',
@@ -243,79 +246,113 @@
       chip('pose'),
       document.getElementById('ambiente').value && 'in '+document.getElementById('ambiente').value,
       document.getElementById('extras').value,
-      '8k uhd, highly detailed, cinematic lighting, hyperrealistic',
+      '8k uhd, highly detailed, cinematic lighting, hyperrealistic, sharp focus',
     ].filter(Boolean).join(', ');
   }
 
-  function setLoading(on){
+  async function replicate(model, input, progressCb){
+    const key = $key.value.trim();
+    // Cria predição
+    const cr = await fetch(PROXY + encodeURIComponent(`https://api.replicate.com/v1/models/${model}/predictions`), {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input }),
+    });
+    const pred = await cr.json();
+    if(!cr.ok) throw new Error(pred.detail || JSON.stringify(pred));
+
+    // Poll
+    let pct = 10;
+    for(let i = 0; i < 120; i++){
+      await sleep(3000);
+      const pr = await fetch(PROXY + encodeURIComponent(`https://api.replicate.com/v1/predictions/${pred.id}`), {
+        headers: { 'Authorization': `Bearer ${key}` }
+      });
+      const st = await pr.json();
+      pct = Math.min(pct + 5, 90);
+      if(progressCb) progressCb(pct);
+      if(st.status === 'succeeded') return st.output;
+      if(st.status === 'failed') throw new Error(st.error || 'Geração falhou');
+    }
+    throw new Error('Tempo esgotado');
+  }
+
+  function setUI(loading){
     document.getElementById('empty').style.display = 'none';
-    document.getElementById('results').classList.remove('show');
-    document.getElementById('loader').classList.toggle('on', on);
-    document.getElementById('btnImg').disabled = on;
-    document.getElementById('btnVid').disabled = on;
+    document.getElementById('loader').classList.toggle('on', loading);
+    document.getElementById('btnImg').disabled = loading;
+    document.getElementById('btnVid').disabled = loading;
+    if(!loading) document.getElementById('progFill').style.width = '5%';
+  }
+
+  function showResult(html, prompt){
+    document.getElementById('output').innerHTML = `<div class="result-wrap">${html}<div class="ptag">📝 ${prompt}</div></div>`;
+    document.getElementById('progFill').style.width = '100%';
   }
 
   async function gerarImagem(){
-    setLoading(true);
-    document.getElementById('loaderMsg').innerHTML = '🖼️ Gerando imagem...<br><small>FLUX Schnell · ~15 segundos</small>';
+    const key = $key.value.trim();
+    if(!key){ alert('Cole seu token do Replicate no campo acima.\nPegue em: replicate.com/account/api-tokens'); return; }
+    setUI(true);
+    document.getElementById('lmsg').innerHTML = '🖼️ Gerando imagem...<br><small>FLUX Schnell · ~15 segundos</small>';
     const prompt = buildPrompt();
     try {
-      const res = await fetch('/api/generate', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ prompt, model:'flux-schnell' }),
-      });
-      const data = await res.json();
-      if(!res.ok) throw new Error(data.error);
+      const output = await replicate('black-forest-labs/flux-schnell', {
+        prompt,
+        aspect_ratio: '3:4',
+        output_format: 'webp',
+        output_quality: 90,
+        disable_safety_checker: true,
+      }, p => document.getElementById('progFill').style.width = p+'%');
 
-      document.getElementById('mediaContainer').innerHTML = data.images.map((url,i) => `
-        <div class="img-card">
-          <img src="${url}" alt="Imagem ${i+1}" />
-          <div class="overlay">
-            <a href="${url}" download class="ovr-btn" target="_blank">⬇️ Baixar</a>
-            <a href="${url}" target="_blank" class="ovr-btn">🔍 Ver</a>
+      const urls = Array.isArray(output) ? output : [output];
+      const cards = urls.map((url,i) => `
+        <div class="media-card">
+          <img src="${url}" alt="imagem ${i+1}" />
+          <div class="ov">
+            <a href="${url}" download class="ovb" target="_blank">⬇️ Baixar</a>
+            <a href="${url}" target="_blank" class="ovb">🔍 Ver</a>
           </div>
         </div>`).join('');
 
-      document.getElementById('actionsRow').innerHTML = `
-        <button class="btn-a primary" onclick="gerarImagem()">🔄 Nova imagem</button>
-        <button class="btn-a vid" onclick="gerarVideo()" style="border-color:#818cf8;color:#c084fc">🎬 Gerar vídeo dessa cena</button>`;
-      document.getElementById('promptUsed').textContent = '📝 ' + prompt;
-      document.getElementById('results').classList.add('show');
+      showResult(`
+        ${cards}
+        <div class="acts">
+          <button class="btn-a p" onclick="gerarImagem()">🔄 Nova imagem</button>
+          <button class="btn-a" onclick="gerarVideo()" style="border-color:#818cf8;color:#a78bfa">🎬 Gerar vídeo dessa cena</button>
+        </div>`, prompt);
     } catch(e){
-      document.getElementById('mediaContainer').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
-      document.getElementById('results').classList.add('show');
-    } finally { setLoading(false); }
+      document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
+    } finally { setUI(false); }
   }
 
   async function gerarVideo(){
-    setLoading(true);
-    document.getElementById('loaderMsg').innerHTML = '🎬 Gerando vídeo...<br><small>MiniMax Video · ~2–4 minutos</small>';
+    const key = $key.value.trim();
+    if(!key){ alert('Cole seu token do Replicate no campo acima.'); return; }
+    setUI(true);
+    document.getElementById('lmsg').innerHTML = '🎬 Gerando vídeo...<br><small>MiniMax Video · 2–4 minutos</small>';
     const prompt = buildPrompt();
     try {
-      const res = await fetch('/api/video', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ prompt, model:'minimax' }),
-      });
-      const data = await res.json();
-      if(!res.ok) throw new Error(data.error);
+      const output = await replicate('minimax/video-01', {
+        prompt,
+        prompt_optimizer: true,
+      }, p => document.getElementById('progFill').style.width = p+'%');
 
-      document.getElementById('mediaContainer').innerHTML = `
-        <div class="img-card">
-          <video src="${data.video}" controls autoplay loop muted playsinline></video>
-          <div class="overlay">
-            <a href="${data.video}" download class="ovr-btn" target="_blank">⬇️ Baixar vídeo</a>
+      const url = Array.isArray(output) ? output[0] : output;
+      showResult(`
+        <div class="media-card">
+          <video src="${url}" controls autoplay loop muted playsinline></video>
+          <div class="ov">
+            <a href="${url}" download class="ovb" target="_blank">⬇️ Baixar vídeo</a>
           </div>
-        </div>`;
-
-      document.getElementById('actionsRow').innerHTML = `
-        <button class="btn-a primary" onclick="gerarVideo()">🔄 Novo vídeo</button>
-        <button class="btn-a" onclick="gerarImagem()">🖼️ Gerar imagem</button>`;
-      document.getElementById('promptUsed').textContent = '📝 ' + prompt;
-      document.getElementById('results').classList.add('show');
+        </div>
+        <div class="acts">
+          <button class="btn-a p" onclick="gerarVideo()">🔄 Novo vídeo</button>
+          <button class="btn-a" onclick="gerarImagem()">🖼️ Gerar imagem</button>
+        </div>`, prompt);
     } catch(e){
-      document.getElementById('mediaContainer').innerHTML = `<div class="err">⚠️ ${e.message}</div>`;
-      document.getElementById('results').classList.add('show');
-    } finally { setLoading(false); }
+      document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
+    } finally { setUI(false); }
   }
 </script>
 </body>
