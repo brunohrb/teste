@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Creator +18</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #18181b;
+      --surface2: #222228;
+      --border: #2e2e38;
+      --accent: #c084fc;
+      --accent2: #f0abfc;
+      --accent-glow: rgba(192,132,252,0.2);
+      --text: #f4f4f5;
+      --muted: #71717a;
+      --danger: #f87171;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a0d2e 0%, #0d0d0f 70%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .logo {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    header h1 {
+      font-size: 1.4rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    header p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .badge {
+      margin-left: auto;
+      background: #7f1d1d; color: #fca5a5;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 0.25rem 0.65rem; border-radius: 6px; letter-spacing: 0.05em;
+    }
+
+    /* ── API Key bar ── */
+    .api-bar {
+      background: #111114;
+      border-bottom: 1px solid var(--border);
+      padding: 0.65rem 2rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .api-bar label { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+    .api-bar input {
+      flex: 1; min-width: 200px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      font-size: 0.85rem; padding: 0.45rem 0.75rem; outline: none;
+      font-family: monospace;
+      transition: border-color 0.2s;
+    }
+    .api-bar input:focus { border-color: var(--accent); }
+    .api-bar small { font-size: 0.72rem; color: var(--muted); }
+    .api-bar a { color: var(--accent); text-decoration: none; }
+
+    /* ── Layout ── */
+    .container {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      min-height: calc(100vh - 120px);
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+    .section-title {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 0.4rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    label { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
+    input[type=text], input[type=number], select, textarea {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text);
+      font-size: 0.88rem; padding: 0.5rem 0.7rem; outline: none;
+      width: 100%; font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type=text]:focus, input[type=number]:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    select option { background: var(--surface2); }
+    textarea { resize: vertical; min-height: 75px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+
+    /* ── Chips ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 0.28rem 0.7rem;
+      font-size: 0.76rem; cursor: pointer;
+      transition: all 0.15s; user-select: none;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .chip.on { background: var(--accent-glow); border-color: var(--accent); color: var(--accent2); }
+
+    /* ── Generate button ── */
+    .btn-gen {
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      color: #fff; border: none; border-radius: 10px;
+      padding: 0.85rem; font-size: 1rem; font-weight: 700;
+      cursor: pointer; width: 100%;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      margin-top: 0.25rem;
+    }
+    .btn-gen:hover { opacity: 0.9; box-shadow: 0 6px 28px rgba(192,132,252,0.4); }
+    .btn-gen:active { transform: scale(0.98); }
+    .btn-gen:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ── Output ── */
+    .output-panel { display: flex; flex-direction: column; }
+    .out-header {
+      padding: 0.9rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .out-header h2 { font-size: 0.92rem; font-weight: 600; }
+    .out-actions { display: flex; gap: 0.5rem; }
+    .btn-sm {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 7px; color: var(--muted);
+      padding: 0.35rem 0.75rem; font-size: 0.78rem;
+      cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+
+    .out-body {
+      flex: 1; padding: 2rem;
+      background: var(--bg); overflow-y: auto;
+      min-height: 400px;
+    }
+
+    /* ── Empty ── */
+    .empty {
+      height: 100%; min-height: 350px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem; color: var(--muted); text-align: center;
+    }
+    .empty .ico { font-size: 3.5rem; opacity: 0.35; }
+    .empty p { font-size: 0.9rem; max-width: 280px; line-height: 1.65; }
+
+    /* ── Loader ── */
+    .loader {
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.25rem; min-height: 350px; color: var(--muted);
+    }
+    .loader.on { display: flex; }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem;
+      max-width: 820px; margin: 0 auto;
+      line-height: 1.9; font-size: 0.95rem; color: #e4e4e7;
+      white-space: pre-wrap;
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .token-info { font-size: 0.7rem; color: var(--muted); text-align: right; margin-top: 0.75rem; max-width: 820px; margin-left: auto; margin-right: auto; }
+
+    /* ── Error ── */
+    .err {
+      background: #1f0808; border: 1px solid #7f1d1d;
+      border-radius: 10px; color: var(--danger);
+      padding: 1rem 1.25rem; font-size: 0.88rem;
+      max-width: 820px; margin: 0 auto;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 720px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+      .api-bar { padding: 0.65rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✨</div>
+  <div>
+    <h1>AI Creator</h1>
+    <p>Gerador de Conteúdo Adulto com IA</p>
+  </div>
+  <span class="badge">+18</span>
+</header>
+
+<!-- API Key -->
+<div class="api-bar">
+  <label>🔑 Chave da API Anthropic:</label>
+  <input type="password" id="apiKey" placeholder="sk-ant-api03-..." oninput="saveKey()" />
+  <small>Não tem chave? <a href="https://console.anthropic.com/" target="_blank">Crie grátis aqui</a> · Salva no navegador, nunca enviada a terceiros.</small>
+</div>
+
+<div class="container">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+
+    <div>
+      <div class="section-title">Identidade</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" id="nome" placeholder="Ex: Sofia" />
+        </div>
+        <div class="form-group">
+          <label>Idade (18+)</label>
+          <input type="number" id="idade" placeholder="25" min="18" max="65" />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">Aparência Física</div>
+
+      <div class="form-group" style="margin-bottom:.7rem">
+        <label>Etnia / Tom de pele</label>
+        <div class="chips" id="c-etnia">
+          <span class="chip" data-g="etnia">Brasileira</span>
+          <span class="chip" data-g="etnia">Europeia</span>
+          <span class="chip" data-g="etnia">Latina</span>
+          <span class="chip" data-g="etnia">Asiática</span>
+          <span class="chip" data-g="etnia">Negra</span>
+          <span class="chip" data-g="etnia">Árabe</span>
+          <span class="chip" data-g="etnia">Indiana</span>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:.7rem">
+        <div class="form-group">
+          <label>Altura</label>
+          <select id="altura">
+            <option value="">Selecione</option>
+            <option>Baixa (até 1,60m)</option>
+            <option>Média (1,61–1,70m)</option>
+            <option>Alta (1,71–1,80m)</option>
+            <option>Muito alta (+1,80m)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tipo corporal</label>
+          <select id="corporal">
+            <option value="">Selecione</option>
+            <option>Magra / Esguia</option>
+            <option>Atlética / Definida</option>
+            <option>Curvilínea / Voluptuosa</option>
+            <option>Plus size</option>
+            <option>Petite</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:.7rem">
+        <label>Cabelo</label>
+        <div class="chips" id="c-cabelo">
+          <span class="chip" data-g="cabelo">Loiro longo</span>
+          <span class="chip" data-g="cabelo">Loiro curto</span>
+          <span class="chip" data-g="cabelo">Castanho</span>
+          <span class="chip" data-g="cabelo">Preto</span>
+          <span class="chip" data-g="cabelo">Ruivo</span>
+          <span class="chip" data-g="cabelo">Cacheado</span>
+          <span class="chip" data-g="cabelo">Crespo</span>
+          <span class="chip" data-g="cabelo">Colorido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Olhos</label>
+        <div class="chips" id="c-olhos">
+          <span class="chip" data-g="olhos">Castanhos</span>
+          <span class="chip" data-g="olhos">Verdes</span>
+          <span class="chip" data-g="olhos">Azuis</span>
+          <span class="chip" data-g="olhos">Mel / Âmbar</span>
+          <span class="chip" data-g="olhos">Pretos</span>
+          <span class="chip" data-g="olhos">Cinza</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">Personalidade</div>
+      <div class="chips" id="c-personalidade">
+        <span class="chip" data-g="personalidade">Tímida</span>
+        <span class="chip" data-g="personalidade">Confiante</span>
+        <span class="chip" data-g="personalidade">Dominante</span>
+        <span class="chip" data-g="personalidade">Submissa</span>
+        <span class="chip" data-g="personalidade">Sedutora</span>
+        <span class="chip" data-g="personalidade">Inocente</span>
+        <span class="chip" data-g="personalidade">Safada</span>
+        <span class="chip" data-g="personalidade">Romântica</span>
+        <span class="chip" data-g="personalidade">Intensa</span>
+        <span class="chip" data-g="personalidade">Brincalhona</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">Cenário</div>
+      <div class="form-group" style="margin-bottom:.7rem">
+        <label>Tipo de cena</label>
+        <select id="tipo-cena">
+          <option value="">Selecione</option>
+          <option>Primeiro encontro</option>
+          <option>Noite de motel</option>
+          <option>Fantasias de escritório</option>
+          <option>Vizinha proibida</option>
+          <option>Férias sensuais</option>
+          <option>Noite de festa</option>
+          <option>Roleplay / Fantasia</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Descreva o cenário</label>
+        <textarea id="cenario" placeholder="Onde e como a cena acontece..."></textarea>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">Detalhes Extras</div>
+      <div class="form-group">
+        <textarea id="extras" placeholder="Fetiches, roupas, situações especiais..." style="min-height:65px"></textarea>
+      </div>
+    </div>
+
+    <button class="btn-gen" id="btn" onclick="generate()">✨ Gerar Conteúdo</button>
+
+  </aside>
+
+  <!-- ── Output ── -->
+  <main class="output-panel">
+    <div class="out-header">
+      <h2>Conteúdo Gerado</h2>
+      <div class="out-actions">
+        <button class="btn-sm" id="btn-copy" onclick="copyText()" style="display:none">📋 Copiar</button>
+        <button class="btn-sm" id="btn-clear" onclick="clearOut()" style="display:none">🗑 Limpar</button>
+      </div>
+    </div>
+
+    <div class="out-body">
+      <div class="empty" id="empty">
+        <div class="ico">💫</div>
+        <p>Preencha as características ao lado e clique em <strong>Gerar Conteúdo</strong>.</p>
+      </div>
+      <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <p>Criando sua história...</p>
+      </div>
+      <div id="result"></div>
+    </div>
+  </main>
+
+</div>
+
+<script>
+  // ── Persist API key ──
+  const keyInput = document.getElementById('apiKey');
+  keyInput.value = localStorage.getItem('anth_key') || '';
+  function saveKey() { localStorage.setItem('anth_key', keyInput.value.trim()); }
+
+  // ── Chips ──
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      const g = c.dataset.g;
+      document.querySelectorAll(`.chip[data-g="${g}"]`).forEach(x => x.classList.remove('on'));
+      c.classList.toggle('on');
+    });
+  });
+  const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
+
+  // ── Generate ──
+  async function generate() {
+    const key = keyInput.value.trim();
+    if (!key) { alert('Cole sua chave da API Anthropic no campo acima.'); return; }
+
+    const btn = document.getElementById('btn');
+    const empty = document.getElementById('empty');
+    const loader = document.getElementById('loader');
+    const result = document.getElementById('result');
+
+    btn.disabled = true;
+    empty.style.display = 'none';
+    result.innerHTML = '';
+    loader.classList.add('on');
+    document.getElementById('btn-copy').style.display = 'none';
+    document.getElementById('btn-clear').style.display = 'none';
+
+    const cenario = document.getElementById('cenario').value || document.getElementById('tipo-cena').value;
+
+    const userMsg = `Você é um escritor especializado em conteúdo adulto (+18) criativo e sensual. Crie uma narrativa detalhada e envolvente com as seguintes características:
+
+Personagem:
+- Nome: ${document.getElementById('nome').value || 'não definido'}
+- Idade: ${document.getElementById('idade').value || 'adulta'} anos
+- Etnia: ${chip('etnia') || 'não especificada'}
+- Altura: ${document.getElementById('altura').value || 'não especificada'}
+- Corpo: ${document.getElementById('corporal').value || 'não especificado'}
+- Cabelo: ${chip('cabelo') || 'não especificado'}
+- Olhos: ${chip('olhos') || 'não especificados'}
+- Personalidade: ${chip('personalidade') || 'não especificada'}
+
+Cenário: ${cenario || 'livre'}
+Extras: ${document.getElementById('extras').value || 'nenhum'}
+
+Escreva uma narrativa adulta (+18), sensual, detalhada e explícita com pelo menos 400 palavras. Seja literário, criativo e apaixonante.`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 2048,
+          messages: [{ role: 'user', content: userMsg }],
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        result.innerHTML = `<div class="err">⚠️ ${data.error?.message || JSON.stringify(data)}</div>`;
+      } else {
+        const text = data.content[0].text;
+        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Claude AI ✦ ${text.length} caracteres</p>`;
+        document.getElementById('btn-copy').style.display = 'flex';
+        document.getElementById('btn-clear').style.display = 'flex';
+      }
+    } catch (e) {
+      result.innerHTML = `<div class="err">⚠️ Erro: ${e.message}</div>`;
+    } finally {
+      loader.classList.remove('on');
+      btn.disabled = false;
+    }
+  }
+
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  async function copyText() {
+    const t = document.querySelector('.card')?.textContent;
+    if (!t) return;
+    await navigator.clipboard.writeText(t);
+    const b = document.getElementById('btn-copy');
+    b.textContent = '✅ Copiado!';
+    setTimeout(() => b.innerHTML = '📋 Copiar', 2000);
+  }
+
+  function clearOut() {
+    document.getElementById('result').innerHTML = '';
+    document.getElementById('empty').style.display = 'flex';
+    document.getElementById('btn-copy').style.display = 'none';
+    document.getElementById('btn-clear').style.display = 'none';
+  }
+</script>
+</body>
+</html>
