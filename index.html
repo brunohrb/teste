@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Creator +18</title>
+  <title>AI Creator +18 — Replicate</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -232,9 +232,9 @@
 
 <!-- API Key -->
 <div class="api-bar">
-  <label>🔑 Chave da API Anthropic:</label>
-  <input type="password" id="apiKey" placeholder="sk-ant-api03-..." oninput="saveKey()" />
-  <small>Não tem chave? <a href="https://console.anthropic.com/" target="_blank">Crie grátis aqui</a> · Salva no navegador, nunca enviada a terceiros.</small>
+  <label>🔑 Token Replicate:</label>
+  <input type="password" id="apiKey" placeholder="r8_..." oninput="saveKey()" />
+  <small>Pegue em <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com/account/api-tokens</a> · Salvo só no seu navegador.</small>
 </div>
 
 <div class="container">
@@ -449,30 +449,41 @@ Extras: ${document.getElementById('extras').value || 'nenhum'}
 Escreva uma narrativa adulta (+18), sensual, detalhada e explícita com pelo menos 400 palavras. Seja literário, criativo e apaixonante.`;
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      // Cria a predição no Replicate (Prefer: wait faz ele aguardar o resultado)
+      const res = await fetch('https://api.replicate.com/v1/models/meta/meta-llama-3-70b-instruct/predictions', {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${key}`,
           'Content-Type': 'application/json',
-          'x-api-key': key,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
+          'Prefer': 'wait=60',
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2048,
-          messages: [{ role: 'user', content: userMsg }],
+          input: {
+            prompt: userMsg,
+            max_new_tokens: 2048,
+            temperature: 0.9,
+            top_p: 0.95,
+          },
         }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) {
-        result.innerHTML = `<div class="err">⚠️ ${data.error?.message || JSON.stringify(data)}</div>`;
-      } else {
-        const text = data.content[0].text;
-        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Claude AI ✦ ${text.length} caracteres</p>`;
+      if (!res.ok || data.error) {
+        result.innerHTML = `<div class="err">⚠️ ${data.error || data.detail || JSON.stringify(data)}</div>`;
+      } else if (data.status === 'succeeded') {
+        const text = Array.isArray(data.output) ? data.output.join('') : data.output;
+        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Llama 3 70B via Replicate ✦ ${text.length} caracteres</p>`;
         document.getElementById('btn-copy').style.display = 'flex';
         document.getElementById('btn-clear').style.display = 'flex';
+      } else if (data.urls?.get) {
+        // Fallback: polling se não retornou em 60s
+        const text = await pollResult(data.urls.get, key);
+        result.innerHTML = `<div class="card">${esc(text)}</div><p class="token-info">Llama 3 70B via Replicate ✦ ${text.length} caracteres</p>`;
+        document.getElementById('btn-copy').style.display = 'flex';
+        document.getElementById('btn-clear').style.display = 'flex';
+      } else {
+        result.innerHTML = `<div class="err">⚠️ Resposta inesperada: ${JSON.stringify(data)}</div>`;
       }
     } catch (e) {
       result.innerHTML = `<div class="err">⚠️ Erro: ${e.message}</div>`;
@@ -483,6 +494,17 @@ Escreva uma narrativa adulta (+18), sensual, detalhada e explícita com pelo men
   }
 
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  async function pollResult(url, key) {
+    for (let i = 0; i < 60; i++) {
+      await new Promise(r => setTimeout(r, 3000));
+      const r = await fetch(url, { headers: { 'Authorization': `Bearer ${key}` } });
+      const d = await r.json();
+      if (d.status === 'succeeded') return Array.isArray(d.output) ? d.output.join('') : d.output;
+      if (d.status === 'failed') throw new Error(d.error || 'Falhou');
+    }
+    throw new Error('Tempo esgotado');
+  }
 
   async function copyText() {
     const t = document.querySelector('.card')?.textContent;
