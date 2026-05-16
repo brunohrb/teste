@@ -8,24 +8,43 @@ export default async function handler(req, res) {
   const token = process.env.REPLICATE_API_TOKEN;
   if (!token) return res.status(500).json({ error: 'REPLICATE_API_TOKEN não configurado no Vercel.' });
 
-  const { prompt, model = 'minimax' } = req.body;
-  if (!prompt) return res.status(400).json({ error: 'Prompt vazio.' });
-
-  const models = {
-    // texto → vídeo
-    'minimax': { owner: 'minimax', name: 'video-01',
-      input: p => ({ prompt: p, prompt_optimizer: true }) },
-    'wan':     { owner: 'wavespeedai', name: 'wan-2.1-t2v-480p',
-      input: p => ({ prompt: p, num_frames: 81, frames_per_second: 16, guidance_scale: 5 }) },
-  };
-
-  const m = models[model] || models['minimax'];
+  const { imageUrl, prompt } = req.body;
 
   try {
-    const create = await fetch(`https://api.replicate.com/v1/models/${m.owner}/${m.name}/predictions`, {
+    let createUrl, body;
+
+    if (imageUrl) {
+      // Image-to-video via Stable Video Diffusion
+      createUrl = 'https://api.replicate.com/v1/models/stability-ai/stable-video-diffusion/predictions';
+      body = {
+        input: {
+          input_image: imageUrl,
+          sizing_strategy: 'maintain_aspect_ratio',
+          motion_bucket_id: 127,
+          fps_id: 8,
+          cond_aug: 0.02,
+          video_length: '25_frames_with_svd_xt',
+        },
+      };
+    } else if (prompt) {
+      // Text-to-video via WAN
+      createUrl = 'https://api.replicate.com/v1/models/wavespeedai/wan-2.1-t2v-480p/predictions';
+      body = {
+        input: {
+          prompt,
+          num_frames: 81,
+          frames_per_second: 16,
+          guidance_scale: 5,
+        },
+      };
+    } else {
+      return res.status(400).json({ error: 'imageUrl ou prompt obrigatório.' });
+    }
+
+    const create = await fetch(createUrl, {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input: m.input(prompt) }),
+      body: JSON.stringify(body),
     });
 
     const prediction = await create.json();

@@ -12,20 +12,12 @@
       --text:#f4f4f5;--muted:#71717a;--danger:#f87171;--success:#34d399;
     }
     body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
-    header{background:linear-gradient(135deg,#1a0d2e,#0d0d0f 70%);border-bottom:1px solid var(--border);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:.9rem}
+    header{background:linear-gradient(135deg,#1a0d2e,#0d0d0f 70%);border-bottom:1px solid var(--border);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:.9rem}
     .logo{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),#818cf8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 18px var(--glow)}
     header h1{font-size:1.3rem;font-weight:700;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     header p{font-size:.73rem;color:var(--muted);margin-top:2px}
     .badge{margin-left:auto;background:#7f1d1d;color:#fca5a5;font-size:.68rem;font-weight:700;padding:.22rem .6rem;border-radius:6px}
 
-    .api-bar{background:#111114;border-bottom:1px solid var(--border);padding:.65rem 1.5rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
-    .api-bar label{font-size:.78rem;color:var(--muted);white-space:nowrap}
-    .api-bar input{flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;padding:.42rem .7rem;outline:none;font-family:monospace;transition:border-color .2s}
-    .api-bar input:focus{border-color:var(--accent)}
-    .btn-sm{background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--muted);padding:.38rem .8rem;font-size:.78rem;cursor:pointer;white-space:nowrap;transition:all .15s}
-    .btn-sm:hover{border-color:var(--accent);color:var(--accent)}
-    #keyStatus{font-size:.78rem}
-    .api-bar a{color:var(--accent);text-decoration:none;font-size:.72rem}
 
     .wrap{display:grid;grid-template-columns:370px 1fr;flex:1}
     aside{background:var(--surface);border-right:1px solid var(--border);padding:1.25rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.1rem}
@@ -90,13 +82,6 @@
   <span class="badge">+18</span>
 </header>
 
-<div class="api-bar">
-  <label>🔑 Token Replicate:</label>
-  <input type="password" id="apiKey" placeholder="r8_..." oninput="saveKey()" />
-  <button class="btn-sm" onclick="testar()">Testar</button>
-  <span id="keyStatus"></span>
-  <a href="https://replicate.com/account/api-tokens" target="_blank">replicate.com/account/api-tokens</a>
-</div>
 
 <div class="wrap">
   <aside>
@@ -204,11 +189,6 @@
 </div>
 
 <script>
-  const PROXY = 'https://corsproxy.io/?';
-  const $key = document.getElementById('apiKey');
-  $key.value = localStorage.getItem('rep_key') || '';
-  function saveKey(){ localStorage.setItem('rep_key', $key.value.trim()) }
-
   document.querySelectorAll('.chip').forEach(c => {
     c.addEventListener('click', () => {
       const g = c.dataset.g;
@@ -217,9 +197,7 @@
     });
   });
   const chip = g => document.querySelector(`.chip[data-g="${g}"].on`)?.textContent.trim() || '';
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-  // Tradução PT → EN para o modelo entender
   const T = {
     etnia:  { 'Brasileira':'Brazilian','Europeia':'European','Latina':'Latina','Asiática':'Asian','Negra':'Black','Árabe':'Middle Eastern' },
     corpo:  { 'Magra':'slim body','Atlética':'athletic toned body','Curvilínea':'curvy voluptuous body','Plus size':'plus-size body','Petite':'petite body' },
@@ -232,68 +210,23 @@
   };
   const tr = (group, val) => T[group]?.[val] || val;
 
-  async function testar(){
-    const key = $key.value.trim();
-    const el = document.getElementById('keyStatus');
-    if(!key){ el.innerHTML = '<span style="color:var(--danger)">Cole o token primeiro</span>'; return; }
-    el.innerHTML = '<span style="color:var(--muted)">Testando...</span>';
-    try {
-      const r = await fetch(PROXY + encodeURIComponent('https://api.replicate.com/v1/account'), {
-        headers: { 'Authorization': `Bearer ${key}` }
-      });
-      const d = await r.json();
-      if(d.username) el.innerHTML = `<span style="color:var(--success)">✅ ${d.username}</span>`;
-      else el.innerHTML = `<span style="color:var(--danger)">❌ Token inválido</span>`;
-    } catch(e){ el.innerHTML = `<span style="color:var(--danger)">❌ ${e.message}</span>`; }
-  }
-
-  function buildPrompt(forVideo = false){
-    const etnia   = tr('etnia',  chip('etnia'));
-    const corpo   = tr('corpo',  document.getElementById('corporal').value);
-    const seios   = tr('seios',  document.getElementById('seios').value);
-    const cabelo  = tr('cabelo', chip('cabelo'));
-    const olhos   = tr('olhos',  chip('olhos'));
-    const roupa   = forVideo
-      ? tr('roupa', chip('roupa')).replace('fully nude','wearing lingerie').replace('topless','wearing bra')
-      : tr('roupa', chip('roupa'));
-    const pose    = tr('pose',   chip('pose'));
-    const amb     = tr('amb',    document.getElementById('ambiente').value);
-    const extras  = document.getElementById('extras').value;
-
+  function buildPrompt(){
+    const etnia  = tr('etnia',  chip('etnia'));
+    const corpo  = tr('corpo',  document.getElementById('corporal').value);
+    const seios  = tr('seios',  document.getElementById('seios').value);
+    const cabelo = tr('cabelo', chip('cabelo'));
+    const olhos  = tr('olhos',  chip('olhos'));
+    const roupa  = tr('roupa',  chip('roupa'));
+    const pose   = tr('pose',   chip('pose'));
+    const amb    = tr('amb',    document.getElementById('ambiente').value);
+    const extras = document.getElementById('extras').value;
     return [
       'RAW photo, photorealistic',
       etnia && etnia+' woman',
       corpo, seios, cabelo, olhos,
       roupa, pose, amb, extras,
-      'ultra detailed skin, 8k uhd, DSLR, sharp focus, cinematic lighting, professional photography',
+      'ultra detailed skin, 8k uhd, DSLR, sharp focus, cinematic lighting',
     ].filter(Boolean).join(', ');
-  }
-
-  async function replicate(model, input, progressCb){
-    const key = $key.value.trim();
-    // Cria predição
-    const cr = await fetch(PROXY + encodeURIComponent(`https://api.replicate.com/v1/models/${model}/predictions`), {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input }),
-    });
-    const pred = await cr.json();
-    if(!cr.ok) throw new Error(pred.detail || JSON.stringify(pred));
-
-    // Poll
-    let pct = 10;
-    for(let i = 0; i < 120; i++){
-      await sleep(3000);
-      const pr = await fetch(PROXY + encodeURIComponent(`https://api.replicate.com/v1/predictions/${pred.id}`), {
-        headers: { 'Authorization': `Bearer ${key}` }
-      });
-      const st = await pr.json();
-      pct = Math.min(pct + 5, 90);
-      if(progressCb) progressCb(pct);
-      if(st.status === 'succeeded') return st.output;
-      if(st.status === 'failed') throw new Error(st.error || 'Geração falhou');
-    }
-    throw new Error('Tempo esgotado');
   }
 
   function setUI(loading){
@@ -312,26 +245,27 @@
   let lastImageUrl = null;
 
   async function gerarImagem(){
-    const key = $key.value.trim();
-    if(!key){ alert('Cole seu token do Replicate no campo acima.\nPegue em: replicate.com/account/api-tokens'); return; }
     setUI(true);
-    document.getElementById('lmsg').innerHTML = '🖼️ Gerando imagem...<br><small>FLUX Dev · ~30 segundos</small>';
+    document.getElementById('lmsg').innerHTML = '🖼️ Gerando imagem...<br><small>SDXL · ~30–60 segundos</small>';
     const prompt = buildPrompt();
+    let pct = 10;
+    const progTimer = setInterval(() => {
+      pct = Math.min(pct + 4, 88);
+      document.getElementById('progFill').style.width = pct + '%';
+    }, 2000);
     try {
-      const output = await replicate('black-forest-labs/flux-dev', {
-        prompt,
-        aspect_ratio: '3:4',
-        output_format: 'jpg',
-        output_quality: 95,
-        guidance: 3.5,
-        num_inference_steps: 28,
-        disable_safety_checker: true,
-      }, p => document.getElementById('progFill').style.width = p+'%');
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Erro desconhecido');
 
-      const urls = Array.isArray(output) ? output : [output];
+      const urls = Array.isArray(data.images) ? data.images : [data.images];
       lastImageUrl = urls[0];
 
-      const cards = urls.map((url,i) => `
+      const cards = urls.map((url, i) => `
         <div class="media-card">
           <img src="${url}" alt="imagem ${i+1}" />
           <div class="ov">
@@ -348,31 +282,33 @@
         </div>`, prompt);
     } catch(e){
       document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
-    } finally { setUI(false); }
+    } finally { clearInterval(progTimer); setUI(false); }
   }
 
   async function gerarVideo(){
-    // Gera imagem primeiro, depois anima
     await gerarImagem();
     if(lastImageUrl) await animarVideo();
   }
 
   async function animarVideo(){
-    const key = $key.value.trim();
-    if(!key || !lastImageUrl) return;
+    if(!lastImageUrl) return;
     setUI(true);
     document.getElementById('lmsg').innerHTML = '🎬 Animando imagem em vídeo...<br><small>Stable Video Diffusion · ~2 minutos</small>';
+    let pct = 10;
+    const progTimer = setInterval(() => {
+      pct = Math.min(pct + 2, 88);
+      document.getElementById('progFill').style.width = pct + '%';
+    }, 3000);
     try {
-      const output = await replicate('stability-ai/stable-video-diffusion', {
-        input_image: lastImageUrl,
-        sizing_strategy: 'maintain_aspect_ratio',
-        motion_bucket_id: 127,
-        fps_id: 8,
-        cond_aug: 0.02,
-        video_length: '25_frames_with_svd_xt',
-      }, p => document.getElementById('progFill').style.width = p+'%');
+      const res = await fetch('/api/video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: lastImageUrl }),
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Erro desconhecido');
 
-      const url = Array.isArray(output) ? output[0] : output;
+      const url = data.video;
       showResult(`
         <div class="media-card">
           <video src="${url}" controls autoplay loop muted playsinline></video>
@@ -387,7 +323,7 @@
         </div>`, 'Vídeo gerado a partir da imagem anterior');
     } catch(e){
       document.getElementById('output').innerHTML = `<div class="result-wrap"><div class="err">⚠️ ${e.message}</div></div>`;
-    } finally { setUI(false); }
+    } finally { clearInterval(progTimer); setUI(false); }
   }
 </script>
 </body>
