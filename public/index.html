@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Creator — Gerador de Conteúdo Adulto</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #18181b;
+      --surface2: #222228;
+      --border: #2e2e38;
+      --accent: #c084fc;
+      --accent2: #f0abfc;
+      --accent-glow: rgba(192, 132, 252, 0.25);
+      --text: #f4f4f5;
+      --muted: #71717a;
+      --danger: #f87171;
+      --success: #34d399;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a0d2e 0%, #0d0d0f 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
+
+    header h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .badge {
+      margin-left: auto;
+      background: #7f1d1d;
+      color: #fca5a5;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Layout ── */
+    .container {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 0;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Sidebar / Form ── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    input,
+    select,
+    textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.9rem;
+      padding: 0.55rem 0.75rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    select option {
+      background: var(--surface2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    /* ── Chip selectors ── */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .chip.selected {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      color: var(--accent2);
+    }
+
+    /* ── Generate button ── */
+    .btn-generate {
+      background: linear-gradient(135deg, var(--accent), #818cf8);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-generate:hover {
+      opacity: 0.9;
+      box-shadow: 0 6px 28px rgba(192, 132, 252, 0.45);
+    }
+
+    .btn-generate:active {
+      transform: scale(0.98);
+    }
+
+    .btn-generate:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── Output panel ── */
+    .output-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .output-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+    }
+
+    .output-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .output-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--muted);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-icon:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .output-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+      background: var(--bg);
+    }
+
+    /* ── Empty state ── */
+    .empty-state {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state .icon {
+      font-size: 3.5rem;
+      opacity: 0.4;
+    }
+
+    .empty-state p {
+      font-size: 0.95rem;
+      max-width: 300px;
+      line-height: 1.6;
+    }
+
+    /* ── Generated content ── */
+    .content-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+      line-height: 1.85;
+      font-size: 0.95rem;
+      color: #e4e4e7;
+      white-space: pre-wrap;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Loading ── */
+    .loader {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      height: 100%;
+      color: var(--muted);
+    }
+
+    .loader.active {
+      display: flex;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Error ── */
+    .error-msg {
+      background: #1f0808;
+      border: 1px solid #7f1d1d;
+      border-radius: 10px;
+      color: var(--danger);
+      padding: 1rem 1.25rem;
+      font-size: 0.88rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ── Token counter ── */
+    .token-info {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 0.75rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">✨</div>
+    <div>
+      <h1>AI Creator</h1>
+      <p>Gerador de Conteúdo Adulto com IA</p>
+    </div>
+    <span class="badge">+18</span>
+  </header>
+
+  <!-- Main layout -->
+  <div class="container">
+
+    <!-- ── Sidebar / Form ── -->
+    <aside class="sidebar">
+
+      <!-- Identidade -->
+      <div>
+        <div class="section-title">Identidade</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Nome</label>
+            <input type="text" id="nome" placeholder="Ex: Sofia" />
+          </div>
+          <div class="form-group">
+            <label>Idade</label>
+            <input type="number" id="idade" placeholder="Ex: 25" min="18" max="60" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Aparência física -->
+      <div>
+        <div class="section-title">Aparência Física</div>
+
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>Etnia / Tom de pele</label>
+          <div class="chips" id="chips-etnia">
+            <span class="chip" data-group="etnia">Brasileira</span>
+            <span class="chip" data-group="etnia">Europeia</span>
+            <span class="chip" data-group="etnia">Latina</span>
+            <span class="chip" data-group="etnia">Asiática</span>
+            <span class="chip" data-group="etnia">Negra</span>
+            <span class="chip" data-group="etnia">Árabe</span>
+            <span class="chip" data-group="etnia">Indiana</span>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:0.75rem">
+          <div class="form-group">
+            <label>Altura</label>
+            <select id="altura">
+              <option value="">Selecione</option>
+              <option>Baixa (até 1,60m)</option>
+              <option>Média (1,61–1,70m)</option>
+              <option>Alta (1,71–1,80m)</option>
+              <option>Muito alta (+1,80m)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tipo corporal</label>
+            <select id="corporal">
+              <option value="">Selecione</option>
+              <option>Magra / Esguia</option>
+              <option>Atlética / Definida</option>
+              <option>Curvilínea / Voluptuosa</option>
+              <option>Plus size</option>
+              <option>Petite</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>Cabelo</label>
+          <div class="chips" id="chips-cabelo">
+            <span class="chip" data-group="cabelo">Loiro longo</span>
+            <span class="chip" data-group="cabelo">Loiro curto</span>
+            <span class="chip" data-group="cabelo">Castanho</span>
+            <span class="chip" data-group="cabelo">Preto</span>
+            <span class="chip" data-group="cabelo">Ruivo</span>
+            <span class="chip" data-group="cabelo">Cacheado</span>
+            <span class="chip" data-group="cabelo">Crespo</span>
+            <span class="chip" data-group="cabelo">Colorido</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Cor dos olhos</label>
+          <div class="chips" id="chips-olhos">
+            <span class="chip" data-group="olhos">Castanhos</span>
+            <span class="chip" data-group="olhos">Verdes</span>
+            <span class="chip" data-group="olhos">Azuis</span>
+            <span class="chip" data-group="olhos">Mel / Âmbar</span>
+            <span class="chip" data-group="olhos">Pretos</span>
+            <span class="chip" data-group="olhos">Cinza</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personalidade -->
+      <div>
+        <div class="section-title">Personalidade</div>
+        <div class="chips" id="chips-personalidade">
+          <span class="chip" data-group="personalidade">Tímida</span>
+          <span class="chip" data-group="personalidade">Confiante</span>
+          <span class="chip" data-group="personalidade">Dominante</span>
+          <span class="chip" data-group="personalidade">Submissa</span>
+          <span class="chip" data-group="personalidade">Sedutora</span>
+          <span class="chip" data-group="personalidade">Inocente</span>
+          <span class="chip" data-group="personalidade">Safada</span>
+          <span class="chip" data-group="personalidade">Romântica</span>
+          <span class="chip" data-group="personalidade">Intensa</span>
+          <span class="chip" data-group="personalidade">Brincalhona</span>
+        </div>
+      </div>
+
+      <!-- Cenário -->
+      <div>
+        <div class="section-title">Cenário</div>
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>Tipo de cena</label>
+          <select id="tipo-cena">
+            <option value="">Selecione o tipo</option>
+            <option>Primeiro encontro</option>
+            <option>Noite de motel</option>
+            <option>Fantasias de escritório</option>
+            <option>Vizinha proibida</option>
+            <option>Férias sensuais</option>
+            <option>Noite de festa</option>
+            <option>Roleplay / Fantasia</option>
+            <option>Personalizado (descreva abaixo)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Descreva o cenário (opcional)</label>
+          <textarea id="cenario" placeholder="Descreva onde e como a cena acontece..."></textarea>
+        </div>
+      </div>
+
+      <!-- Extras -->
+      <div>
+        <div class="section-title">Detalhes Extras</div>
+        <div class="form-group">
+          <textarea id="extras" placeholder="Fetiches, detalhes especiais, roupas, etc..." style="min-height:70px"></textarea>
+        </div>
+      </div>
+
+      <!-- Generate -->
+      <button class="btn-generate" id="btn-generate" onclick="generate()">
+        <span>✨</span> Gerar Conteúdo
+      </button>
+
+    </aside>
+
+    <!-- ── Output Panel ── -->
+    <main class="output-panel">
+      <div class="output-header">
+        <h2>Conteúdo Gerado</h2>
+        <div class="output-actions">
+          <button class="btn-icon" id="btn-copy" onclick="copyContent()" style="display:none">
+            📋 Copiar
+          </button>
+          <button class="btn-icon" id="btn-clear" onclick="clearContent()" style="display:none">
+            🗑 Limpar
+          </button>
+        </div>
+      </div>
+
+      <div class="output-body" id="output-body">
+
+        <!-- Empty state -->
+        <div class="empty-state" id="empty-state">
+          <div class="icon">💫</div>
+          <p>Preencha as características ao lado e clique em <strong>Gerar Conteúdo</strong> para criar sua história personalizada.</p>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader" id="loader">
+          <div class="spinner"></div>
+          <p>Criando sua história...</p>
+        </div>
+
+        <!-- Result -->
+        <div id="result-container" style="display:none"></div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    // ── Chip selection (single per group) ──
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const group = chip.dataset.group;
+        document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(c => c.classList.remove('selected'));
+        chip.classList.toggle('selected');
+      });
+    });
+
+    function getChipValue(group) {
+      const el = document.querySelector(`.chip[data-group="${group}"].selected`);
+      return el ? el.textContent.trim() : '';
+    }
+
+    // ── Generate ──
+    async function generate() {
+      const btn = document.getElementById('btn-generate');
+      const loader = document.getElementById('loader');
+      const emptyState = document.getElementById('empty-state');
+      const resultContainer = document.getElementById('result-container');
+
+      const cenarioBase = document.getElementById('tipo-cena').value;
+      const cenarioCustom = document.getElementById('cenario').value;
+      const cenarioFinal = cenarioCustom || cenarioBase;
+
+      const payload = {
+        nome: document.getElementById('nome').value,
+        idade: document.getElementById('idade').value,
+        etnia: getChipValue('etnia'),
+        altura: document.getElementById('altura').value,
+        corporal: document.getElementById('corporal').value,
+        cabelo: getChipValue('cabelo'),
+        olhos: getChipValue('olhos'),
+        personalidade: getChipValue('personalidade'),
+        cenario: cenarioFinal,
+        extras: document.getElementById('extras').value,
+      };
+
+      btn.disabled = true;
+      emptyState.style.display = 'none';
+      resultContainer.style.display = 'none';
+      loader.classList.add('active');
+      document.getElementById('btn-copy').style.display = 'none';
+      document.getElementById('btn-clear').style.display = 'none';
+
+      try {
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          resultContainer.innerHTML = `<div class="error-msg">⚠️ ${data.error || 'Erro desconhecido'}</div>`;
+        } else {
+          resultContainer.innerHTML = `
+            <div class="content-card">${escapeHtml(data.content)}</div>
+            <p class="token-info">Gerado com Claude AI ✦ ${data.content.length} caracteres</p>
+          `;
+          document.getElementById('btn-copy').style.display = 'flex';
+          document.getElementById('btn-clear').style.display = 'flex';
+        }
+
+        resultContainer.style.display = 'block';
+      } catch (err) {
+        resultContainer.style.display = 'block';
+        resultContainer.innerHTML = `<div class="error-msg">⚠️ Erro de conexão com o servidor: ${err.message}</div>`;
+      } finally {
+        loader.classList.remove('active');
+        btn.disabled = false;
+      }
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function copyContent() {
+      const card = document.querySelector('.content-card');
+      if (!card) return;
+      await navigator.clipboard.writeText(card.textContent);
+      const btn = document.getElementById('btn-copy');
+      btn.textContent = '✅ Copiado!';
+      setTimeout(() => (btn.innerHTML = '📋 Copiar'), 2000);
+    }
+
+    function clearContent() {
+      document.getElementById('result-container').style.display = 'none';
+      document.getElementById('empty-state').style.display = 'flex';
+      document.getElementById('btn-copy').style.display = 'none';
+      document.getElementById('btn-clear').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
